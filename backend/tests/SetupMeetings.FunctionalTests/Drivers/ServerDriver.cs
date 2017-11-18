@@ -16,10 +16,6 @@ namespace SetupMeetings.FunctionalTests.Drivers
 
         public ServerDriver()
         {
-        }
-
-        public void Start()
-        {
             _server = new TestServer(new WebHostBuilder()
                 .Configure(app =>
                 {
