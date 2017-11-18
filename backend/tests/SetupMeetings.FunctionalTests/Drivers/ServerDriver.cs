@@ -17,6 +17,7 @@ namespace SetupMeetings.FunctionalTests.Drivers
         public ServerDriver()
         {
             _server = new TestServer(new WebHostBuilder()
+                .UseStartup<Startup>()
                 .Configure(app =>
                 {
                     app.Use(next => async context =>
@@ -24,14 +25,13 @@ namespace SetupMeetings.FunctionalTests.Drivers
                         _requests.Add(context);
                         await next.Invoke(context);
                     });
-                })
-                .UseStartup<Startup>());
+                }));
         }
 
         public void ShouldReceiveMessage(Action<HttpContext> assertion)
         {
             var context = default(HttpContext);
-            if (!_requests.TryTake(out context, TimeSpan.FromSeconds(5)))
+            if (!_requests.TryTake(out context, TimeSpan.FromSeconds(10)))
             {
                 Assert.Fail("レスポンスが来ていない");
             }

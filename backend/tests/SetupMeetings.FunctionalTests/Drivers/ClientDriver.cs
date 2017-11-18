@@ -10,7 +10,7 @@ namespace SetupMeetings.FunctionalTests.Drivers
     class ClientDriver
     {
         private HttpClient httpClient;
-        private BlockingCollection<HttpResponseMessage> responseMessages;
+        private readonly BlockingCollection<HttpResponseMessage> responseMessages = new BlockingCollection<HttpResponseMessage>();
 
         public ClientDriver(HttpClient httpClient)
         {
@@ -29,7 +29,7 @@ namespace SetupMeetings.FunctionalTests.Drivers
             {
                 Assert.Fail("レスポンスが戻ってきていない");
             }
-            Assert.IsTrue(response.StatusCode == HttpStatusCode.Unauthorized);
+            Assert.IsFalse(response.IsSuccessStatusCode);
         }
 
         public void LoginWith(string username, string password)
