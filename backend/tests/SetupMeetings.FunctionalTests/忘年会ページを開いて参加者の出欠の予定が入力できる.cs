@@ -24,5 +24,16 @@ namespace SetupMeetings.FunctionalTests
             _server.ShouldReceiveMessage(m => Assert.IsTrue(m.Request.Path.StartsWithSegments(PathString.FromUriComponent("/api/meetings/1"))));
             _client.ShouldRejected();
         }
+
+        [TestMethod]
+        public void ログイン状態で忘年会ページを開くと一覧を表示することができる()
+        {
+            _client.RequestToken();
+            _server.ShouldReceiveMessage(m => Assert.IsTrue(m.Request.Path.StartsWithSegments("/connect/token")));
+            _client.ShouldGrant();
+            _client.RequestUrl("/api/meetings/1");
+            _server.ShouldReceiveMessage(m => Assert.IsTrue(m.Request.Path.StartsWithSegments("/api/meetings/1")));
+            _client.ShouldReturnResponse(r => Assert.IsNotNull(r.Content.ReadAsStringAsync().Result));
+        }
     }
 }
