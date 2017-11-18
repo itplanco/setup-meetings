@@ -20,8 +20,8 @@ namespace SetupMeetings.FunctionalTests
         [TestMethod]
         public void 未ログイン状態で忘年会ページを開くとログインが拒否される()
         {
-            _client.RequestUrl("/");
-            _server.ShouldReceiveMessage(m => Assert.IsTrue(m.Request.Path.StartsWithSegments(PathString.FromUriComponent("/"))));
+            _client.RequestUrl("/api/meetings/1");
+            _server.ShouldReceiveMessage(m => Assert.IsTrue(m.Request.Path.StartsWithSegments(PathString.FromUriComponent("/api/meetings/1"))));
             _client.ShouldRejected();
         }
     }
