@@ -16,11 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SetupMeetings.WebApi\SetupMeetings.WebApi.csproj" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Utils\" />
+    <ProjectReference Include="..\..\src\SetupMeetings.WebApi\SetupMeetings.WebApi.csproj" />
   </ItemGroup>
 
 </Project>
