@@ -46,7 +46,7 @@ namespace SetupMeetings.WebApi.Controllers
             return RedirectToAction("GetAttendee", new { meetingId = meetingId, attendeeId = 1 });
         }
 
-        [HttpPost]
+        [HttpDelete]
         public IActionResult Delete(int meetingId, int attendeeId)
         {
             return Ok();
