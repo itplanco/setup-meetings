@@ -1,11 +1,10 @@
-﻿namespace SetupMeetings.WebApi.Models
+﻿using System.Collections.Generic;
+
+namespace SetupMeetings.WebApi.Models
 {
     public class MeetingPaymentViewModel
     {
-        public string UserId { get; internal set; }
-        public string UserName { get; internal set; }
-        public string OrganizationId { get; internal set; }
-        public string OrganizationName { get; internal set; }
-        public decimal Price { get; internal set; }
+        public decimal TotalPrice { get; internal set; }
+        public List<MeetingPaymentDetailViewModel> Details { get; internal set; }
     }
 }

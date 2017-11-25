@@ -2,6 +2,7 @@
 using SetupMeetings.WebApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace SetupMeetings.WebApi.Controllers
 {
@@ -9,13 +10,10 @@ namespace SetupMeetings.WebApi.Controllers
     public class MeetingsController : ControllerBase
     {
         [HttpGet("{meetingId}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MeetingViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public IActionResult GetMeeting(string meetingId)
         {
-            if (meetingId != "1")
-            {
-                return NotFound();
-            }
-
             return Ok(new MeetingViewModel()
             {
                 MeetingId = meetingId,
@@ -57,16 +55,13 @@ namespace SetupMeetings.WebApi.Controllers
         }
 
         [HttpGet("{meetingId}/invitees")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(InviteesViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public IActionResult GetInvitees(string meetingId)
         {
-            if (meetingId != "1")
+            return Ok(new InviteesViewModel()
             {
-                return NotFound();
-            }
-
-            return Ok(new
-            {
-                Invitee = new List<InviteeViewModel>()
+                Invitees = new List<InviteeViewModel>()
                 {
                     new InviteeViewModel()
                     {
@@ -81,13 +76,10 @@ namespace SetupMeetings.WebApi.Controllers
         }
 
         [HttpGet("{meetingId}/invitees/{inviteeId}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(InviteeViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public IActionResult GetInvitee(string meetingId, string inviteeId)
         {
-            if (meetingId != "1" && inviteeId != "1")
-            {
-                return NotFound();
-            }
-
             return Ok(new InviteeViewModel()
             {
                 UserId = "1",
@@ -99,32 +91,35 @@ namespace SetupMeetings.WebApi.Controllers
         }
 
         [HttpPost("{meetingId}/invitees")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult AddInvitee(string meetingId, [FromBody]AttendeeCreateCommandModel newAttendee)
         {
-            return RedirectToAction(nameof(GetInvitee), new { meetingId, inviteeId = "1" });
+            return CreatedAtAction(nameof(GetAttendee), new { meetingId, inviteeId = "1" });
         }
 
         [HttpDelete("{meetingId}/invitees/{inviteeId}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult DeleteInvitee(string meetingId, int inviteeId)
         {
             return Ok();
         }
 
         [HttpPut("{meetingId}/invitees/{inviteeId}/rsvp")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult InviteeRespondToRsvp(string meetingId, string inviteeId, [FromBody]InviteeRespondToRsvpCommandModel response)
         {
             return RedirectToAction(nameof(GetInvitee), new { meetingId, inviteeId });
         }
 
         [HttpGet("{meetingId}/attendees")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AttendeesViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public IActionResult GetAttendees(string meetingId)
         {
-            if (meetingId != "1")
-            {
-                return NotFound();
-            }
-
-            return Ok(new
+            return Ok(new AttendeesViewModel()
             {
                 Attendees = new List<AttendeeViewModel>()
                 {
@@ -141,6 +136,8 @@ namespace SetupMeetings.WebApi.Controllers
         }
 
         [HttpGet("{meetingId}/attendees/{attendeeId}")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AttendeeViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public IActionResult GetAttendee(int meetingId, int attendeeId)
         {
             return Ok(new AttendeeViewModel()
@@ -154,15 +151,49 @@ namespace SetupMeetings.WebApi.Controllers
         }
 
         [HttpPost("{meetingId}/attendees")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult AddAttendee(string meetingId, [FromBody]AttendeeCreateCommandModel newAttendee)
         {
-            return RedirectToAction(nameof(GetAttendee), new { meetingId = meetingId, attendeeId = 1 });
+            return CreatedAtAction(nameof(GetAttendee), new { meetingId = meetingId, attendeeId = 1 });
         }
 
         [HttpDelete("{meetingId}/attendees/{attendeeId}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public IActionResult RemoveAteendee(string meetingId, string attendeeId, [FromBody]AttendeeCreateCommandModel newAttendee)
         {
             return Ok();
+        }
+
+        [HttpGet("{meetingId}/payment")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MeetingPaymentViewModel))]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public IActionResult GetPaymentInfo(string meetingId)
+        {
+            return Ok(new MeetingPaymentViewModel()
+            {
+                TotalPrice = 10000,
+                Details = new List<MeetingPaymentDetailViewModel>()
+                {
+                    new MeetingPaymentDetailViewModel()
+                    {
+                        UserId = "1",
+                        UserName = "誰それ何某",
+                        OrganizationId = "1",
+                        OrganizationName = "株式会社 なんちゃら",
+                        Price = 2000,
+                    },
+                },
+            });
+        }
+
+        [HttpPut("{meetingId}/payment")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public IActionResult UpdateTotalPayment(string meetingId, [FromBody] MeetingPaymentCommandModel payment)
+        {
+            return NoContent();
         }
     }
 }
