@@ -1,0 +1,61 @@
+<div>
+    <div>{{meeting.Name}}</div>
+    <div *ngIf="meeting.Status == 0">
+        <input type="button" value="開催" (click)="onClick()">
+    </div>
+    <div *ngIf="meeting.Status == 1">
+        <input type="button" value="中止" (click)="onClick()">
+    </div>
+    <div *ngIf="meeting.Status == 0">
+        <table border="1">
+            <tr>
+                <td>
+                    <div>名前</div>
+                </td>
+                <td>
+                    <div>出欠</div>
+                </td>
+            </tr>
+            <tr *ngFor="let member of meeting.Member">
+                <td>
+                    <div>{{member.Name}}</div>
+                </td>
+                <td>
+                    <div *ngIf="member.PresenceOrAbsence">〇</div>
+                    <div *ngIf="!member.PresenceOrAbsence">✖</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div *ngIf="meeting.Status == 1">
+        <table border="1">
+            <tr>
+                <td>
+                    <div>名前</div>
+                </td>
+                <td>
+                    <div>出席</div>
+                </td>
+                <td>
+                    <div>金額徴収</div>
+                </td>
+            </tr>
+            <tr *ngFor="let member of meeting.Member">
+                <td>
+                    <div>{{member.Name}}</div>
+                </td>
+                <td>
+                    <div *ngIf="member.Attendance">〇</div>
+                    <div *ngIf="!member.Attendance">✖</div>
+                </td>
+                <td>
+                    <div>{{member.Collection}}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+            <payment-pagearea></payment-pagearea>            
+    </div>
+</div>

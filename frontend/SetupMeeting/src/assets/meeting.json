@@ -1,0 +1,14 @@
+{
+    "ID":"1",
+    "Name":"忘年会",
+    "Status":0,
+    "Member":[
+        {
+            "MemberID":"0",
+            "Name":"川口",
+            "PresenceOrAbsence":false,
+            "Attendance":false,
+            "Collection":0
+        }
+    ]
+}
