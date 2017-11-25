@@ -5,6 +5,6 @@ namespace SetupMeetings.WebApi.Models
     public class InviteeRespondToRsvpInputModel
     {
         [Required]
-        public string Response { get; set; }
+        public bool Response { get; set; }
     }
 }
