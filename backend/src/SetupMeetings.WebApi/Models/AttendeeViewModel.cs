@@ -7,5 +7,6 @@
         public string OrganizationId { get; set; }
         public string OrganizationName { get; set; }
         public bool Attend { get; set; }
+        public bool Paid { get; set; }
     }
 }

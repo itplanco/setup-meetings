@@ -1,8 +1,7 @@
 ﻿namespace SetupMeetings.WebApi.Models
 {
-    public class AttendeeCreateInputModel
+    public class CreateNewAttendeeInputModel
     {
         public string UserId { get; set; }
-        public string OrganizationId { get; set; }
     }
 }

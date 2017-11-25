@@ -2,7 +2,7 @@
 
 namespace SetupMeetings.WebApi.Models
 {
-    public class MeetingCreateInputModel
+    public class CreateNewMeetingInputModel
     {
         public string Name { get; set; }
         public DateTime StartAt { get; set; }
