@@ -93,7 +93,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost("{meetingId}/invitees")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult AddInvitee(string meetingId, [FromBody]AttendeeCreateCommandModel newAttendee)
+        public IActionResult AddInvitee(string meetingId, [FromBody]AttendeeCreateInputModel newAttendee)
         {
             return CreatedAtAction(nameof(GetAttendee), new { meetingId, inviteeId = "1" });
         }
@@ -109,7 +109,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPut("{meetingId}/invitees/{inviteeId}/rsvp")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult InviteeRespondToRsvp(string meetingId, string inviteeId, [FromBody]InviteeRespondToRsvpCommandModel response)
+        public IActionResult InviteeRespondToRsvp(string meetingId, string inviteeId, [FromBody]InviteeRespondToRsvpInputModel response)
         {
             return RedirectToAction(nameof(GetInvitee), new { meetingId, inviteeId });
         }
@@ -153,7 +153,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost("{meetingId}/attendees")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult AddAttendee(string meetingId, [FromBody]AttendeeCreateCommandModel newAttendee)
+        public IActionResult AddAttendee(string meetingId, [FromBody]AttendeeCreateInputModel newAttendee)
         {
             return CreatedAtAction(nameof(GetAttendee), new { meetingId = meetingId, attendeeId = 1 });
         }
@@ -161,7 +161,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpDelete("{meetingId}/attendees/{attendeeId}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult RemoveAteendee(string meetingId, string attendeeId, [FromBody]AttendeeCreateCommandModel newAttendee)
+        public IActionResult RemoveAteendee(string meetingId, string attendeeId, [FromBody]AttendeeCreateInputModel newAttendee)
         {
             return Ok();
         }
@@ -191,7 +191,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPut("{meetingId}/payment")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult UpdateTotalPayment(string meetingId, [FromBody] MeetingPaymentCommandModel payment)
+        public IActionResult UpdateTotalPayment(string meetingId, [FromBody] MeetingPaymentInputModel payment)
         {
             return NoContent();
         }
