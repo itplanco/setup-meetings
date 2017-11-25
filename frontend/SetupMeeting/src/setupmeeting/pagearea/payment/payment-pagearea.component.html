@@ -1,25 +1,33 @@
-<div>payment</div>
-
-<div>
-    <!-- <div><span>人数</span><input type="number" value="payment.MemberCount" [ngModel]="payment.MemberCount"></div> -->
-    <div>
-        <span>合計金額</span>
-        <input type="number" value="payment.TotalPay" [ngModel]="payment.TotalPay">
+<div class="payment-content">
+    <div class="input-pay">
+        <span>合計金額:</span>
+        <input type="number" value="payment.totalPrice" [ngModel]="payment.totalPrice">
     </div>
-    <div>
+    <div class="output-button">
         <input type="button" value="送信" (click)="onClick()">
     </div>
-    <div>
-        <table>
-            <tr>
-                <td>
-                    名前
-                </td>
-                <td>
-                    金額
-                </td>
-            </tr>
-            
-        </table>
+
+    <div class="main-content" *ngIf="displayPayment">
+        <div>金額一覧</div>
+        <div class="payment-list">
+            <table border="1">
+                <tr class="table-header">
+                    <td>
+                        部署
+                    </td>
+                    <td>
+                        名前
+                    </td>
+                    <td>
+                        金額
+                    </td>
+                </tr>
+                <tr *ngFor="let sponsor of payment.details">
+                    <td>{{sponsor.organizationName}}</td>
+                    <td>{{sponsor.userName}}</td>
+                    <td>{{sponsor.price}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>

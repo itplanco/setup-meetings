@@ -1,14 +1,39 @@
 {
-    "ID":"1",
-    "Name":"忘年会",
-    "Status":0,
-    "Member":[
-        {
-            "MemberID":"0",
-            "Name":"川口",
-            "PresenceOrAbsence":false,
-            "Attendance":false,
-            "Collection":0
-        }
-    ]
-}
+    "meetingId": "1",
+    "name": "忘年会",
+    "startAt": "2017-12-07T10:30:00Z",
+    "endAt": "2017-12-07T12:30:00Z",
+    "organizers": [
+      {
+        "userId": "1",
+        "userName": "誰それ何某",
+        "organizationId": "1",
+        "organizationName": "株式会社 なんちゃら"
+      }
+    ],
+    "invitees": [
+      {
+        "userId": "1",
+        "userName": "誰それ何某",
+        "organizationId": "1",
+        "organizationName": "株式会社 なんちゃら",
+        "rsvp": false
+      },{
+        "userId": "2",
+        "userName": "誰それ何某2",
+        "organizationId": "1",
+        "organizationName": "株式会社 なんちゃら",
+        "rsvp": false
+      }
+    ],
+    "attendees": [
+      {
+        "userId": "1",
+        "userName": "誰それ何某",
+        "organizationId": "1",
+        "organizationName": "株式会社 なんちゃら",
+        "attend": false
+      }
+    ],
+    "sponsers": null
+  }

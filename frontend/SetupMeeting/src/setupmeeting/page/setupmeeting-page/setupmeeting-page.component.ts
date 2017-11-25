@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MeetingSevice } from '../../service/meeting.service';
-import { Meeting, MeetingStatus } from '../../model/meeting';
+import { Meeting, MeetingStatus, Invite, Attende } from '../../model/meeting';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -29,16 +29,49 @@ export class SetupMeetingPageComponent {
     getMeeting(){
         this.meetingSevice.getMeeting(this.meetingId).then(response => {
             this.meeting = response;
+            if(!this.meeting.status){
+                this.meeting.status = MeetingStatus.Before;
+            }
         })
     }
 
     
     //クリックイベント
     onClick(){
-        if(this.meeting.Status == MeetingStatus.Open){
-            this.meeting.Status = MeetingStatus.Before;
+        if(this.meeting.status == MeetingStatus.Open){
+            this.meeting.status = MeetingStatus.Before;
+            this.meetingSevice.getInvate(this.meetingId).then(response => {
+                this.meeting.invitees =  response;
+            })
         }else{
-            this.meeting.Status = MeetingStatus.Open;
+            this.meeting.status = MeetingStatus.Open;
+            this.meetingSevice.getAttend(this.meetingId).then(response => {
+                this.meeting.attendees =  response;
+            })
+        }
+    }
+
+    onInviteClick(invite:Invite,rsvp:boolean ){
+        for(var i in this.meeting.invitees){
+            if(this.meeting.invitees[i].userId == invite.userId){
+                this.meeting.invitees[i].rsvp = rsvp; 
+            }
+        }
+    }
+
+    onAttendClick(attende:Attende,attend:boolean){
+        for(var i in this.meeting.attendees){
+            if(this.meeting.attendees[i].userId == attende.userId){
+                this.meeting.attendees[i].attend = attend; 
+            }
+        }
+    }
+
+    onPayedClick(attende:Attende,payed:boolean){
+        for(var i in this.meeting.attendees){
+            if(this.meeting.attendees[i].userId == attende.userId){
+                this.meeting.attendees[i].payed = payed; 
+            }
         }
     }
 }

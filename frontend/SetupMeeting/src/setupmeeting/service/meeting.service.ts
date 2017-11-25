@@ -1,27 +1,67 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-// import { RequestOptions } from 'http';
-import { Meeting } from '../model/meeting';
+import { Meeting, Invite, Attende } from '../model/meeting';
 import { Http } from '@angular/http';
+import { Payment } from '../model/payments';
+// import { RequestOptions } from 'http';
+import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class MeetingSevice{
     headers: Headers;
-    // options: RequestOptions;
+    options: any;
 
     constructor(private http: Http) {
-        // this.headers = new Headers({ 'Content-Type': 'application/json', 
-        // 'Accept': 'q=0.8;application/json;q=0.9' });
+        this.headers = new Headers({ 'Content-Type': 'application/json'});
         
         // this.options = new RequestOptions({ headers: this.headers });
     }
 
-    getMeeting(id:string): Promise<any> {
+    getMeeting(id:string): Promise<Meeting> {
         return this.http
             .get('./assets/meeting.json')
             .toPromise()
             .then(response => response.json())
             .catch(this.handleError);
     }
+
+    getInvate(id:string): Promise<Invite[]> {
+        return this.http
+            .get('./assets/invate.json')
+            .toPromise()
+            .then(response => response.json())
+            .catch(this.handleError);
+    }
+
+    putInvate(meetingId:string,userId:string,rsvp:boolean){
+        
+    }
+
+    getAttend(id:string): Promise<Attende[]> {
+        return this.http
+            .get('./assets/attend.json')
+            .toPromise()
+            .then(response => response.json())
+            .catch(this.handleError);
+    }
+
+    postAttend(meetingId:string,attendees:Attende[]){
+
+    }
+
+
+    getPayment(meetingid:string): Promise<Payment>{
+        return this.http
+        .get('./assets/payment.json')
+        .toPromise()
+        .then(response => response.json())
+        .catch(this.handleError);
+    }
+
+    putPayment(payment:Payment){
+
+    }
+
+    
 
     
 
