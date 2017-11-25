@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SetupMeetings.WebApi.Controllers.Models;
 using SetupMeetings.WebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,14 @@ namespace SetupMeetings.WebApi.Controllers
                     }
                 },
             });
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public IActionResult Create([FromBody] MeetingCreateInputModel newMeeting)
+        {
+            return CreatedAtAction(nameof(GetMeeting), new { meetingId = "1" });
         }
 
         [HttpGet("{meetingId}/invitees")]
