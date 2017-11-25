@@ -4,6 +4,6 @@ namespace SetupMeetings.WebApi.Models
 {
     public class AttendeesViewModel
     {
-        public List<AttendeeViewModel> Attendees { get; internal set; }
+        public List<AttendeeViewModel> Attendees { get; set; }
     }
 }

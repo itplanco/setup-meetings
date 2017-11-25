@@ -2,7 +2,7 @@
 {
     public class AttendeeCreateInputModel
     {
-        public string UserId { get; internal set; }
-        public string OrganizationId { get; internal set; }
+        public string UserId { get; set; }
+        public string OrganizationId { get; set; }
     }
 }
