@@ -51,6 +51,10 @@ namespace SetupMeetings.WebApi
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             app.UseMvc();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

@@ -86,6 +86,9 @@ call :ExecuteCmd npm run build
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 5. Copy dist folder
+IF NOT EXISTS "%DEPLOYMENT_TEMP%\wwwroot" (
+  mkdir "%DEPLOYMENT_TEMP%\wwwroot"
+)
 call :ExecuteCmd xcopy dist "%DEPLOYMENT_TEMP%\wwwroot" /Y
 IF !ERRORLEVEL! NEQ 0 goto error
 popd
