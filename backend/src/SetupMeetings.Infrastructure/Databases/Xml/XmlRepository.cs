@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace SetupMeetings.Infrastructure.Databases.Xml
 {
-    class XmlRepository<T, TId>
+    public class XmlRepository<T, TId>
         where T : class
     {
         private string _filePath;
@@ -54,13 +53,11 @@ namespace SetupMeetings.Infrastructure.Databases.Xml
             {
                 var doc = new XDocument();
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<T>));
-                using (var writer = doc.Root.CreateWriter())
+                using (var writer = doc.CreateWriter())
                 {
-                    entities.Values
-                        .ToList()
-                        .ForEach(v => xmlSerializer.Serialize(writer, v));
+                    xmlSerializer.Serialize(writer, entities.Values.ToList());
                 }
-                using (var stream = new FileStream(_filePath, FileMode.Create, FileAccess.Read))
+                using (var stream = new FileStream(_filePath, FileMode.Create, FileAccess.Write))
                 {
                     doc.Save(stream);
                 }
@@ -68,13 +65,12 @@ namespace SetupMeetings.Infrastructure.Databases.Xml
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message, "ERROR");
-                return null;
             }
         }
 
         protected void SyncIfNeeded()
         {
-            if (!_watch.IsRunning && _watch.Elapsed > TimeSpan.FromSeconds(10))
+            if (!_watch.IsRunning || _watch.Elapsed > TimeSpan.FromSeconds(10))
             {
                 var entities = LoadFromXml();
                 if (entities != null)
@@ -99,7 +95,7 @@ namespace SetupMeetings.Infrastructure.Databases.Xml
                     var doc = XDocument.Load(stream);
 
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<T>));
-                    using (var reader = doc.Root.CreateReader())
+                    using (var reader = doc.CreateReader())
                     {
                         var list = (List<T>)xmlSerializer.Deserialize(reader);
                         return list.ToDictionary(v => _selector(v), v => v);
