@@ -16,6 +16,7 @@ namespace SetupMeetings.WebApi
                 c.SwaggerDoc("v1", new Info
                 {
                     Title = "e-幹事 API",
+                    Version = "v1",
                 });
             });
         }

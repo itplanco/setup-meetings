@@ -2,7 +2,7 @@
 
 namespace SetupMeetings.WebApi.Models.Meetings
 {
-    public class InviteeRespondToRsvpInputModel
+    public class InviteeRespondToRsvpRequest
     {
         [Required]
         public bool Response { get; set; }

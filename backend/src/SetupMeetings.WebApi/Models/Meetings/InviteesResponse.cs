@@ -2,8 +2,8 @@
 
 namespace SetupMeetings.WebApi.Models.Meetings
 {
-    public class InviteesViewModel
+    public class InviteesResponse
     {
-        public List<InviteeViewModel> Invitees { get; set; }
+        public List<InviteeResponse> Invitees { get; set; }
     }
 }

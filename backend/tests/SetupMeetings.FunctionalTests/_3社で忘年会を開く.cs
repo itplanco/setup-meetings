@@ -62,7 +62,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void 忘年会を作成する()
         {
-            var newMeeting = new CreateNewMeetingInputModel();
+            var newMeeting = new CreateNewMeetingRequest();
             newMeeting.Name = "忘年会";
             newMeeting.OrganizerUserId = "organizer1";
             _client.Post("/api/meetings", newMeeting);
@@ -72,7 +72,7 @@ namespace SetupMeetings.FunctionalTests
         private void 忘年会が作成されたことを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -82,16 +82,16 @@ namespace SetupMeetings.FunctionalTests
 
         private void 忘年会にスポンサーを追加する()
         {
-            _client.Post($"/api/meetings/{MEETING_ID}/sponsors/", new CreateNewSponsorInputModel() { UserId = "sponsor1" });
+            _client.Post($"/api/meetings/{MEETING_ID}/sponsors/", new CreateNewSponsorRequest() { UserId = "sponsor1" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
-            _client.Post($"/api/meetings/{MEETING_ID}/sponsors/", new CreateNewSponsorInputModel() { UserId = "sponsor2" });
+            _client.Post($"/api/meetings/{MEETING_ID}/sponsors/", new CreateNewSponsorRequest() { UserId = "sponsor2" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
         }
 
         private void 忘年会にスポンサーが追加される()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -101,24 +101,24 @@ namespace SetupMeetings.FunctionalTests
 
         private void 招待者を6人追加する()
         {
-            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeInputModel() { UserId = "invitee1" });
+            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeRequest() { UserId = "invitee1" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
-            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeInputModel() { UserId = "invitee2" });
+            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeRequest() { UserId = "invitee2" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
-            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeInputModel() { UserId = "invitee3" });
+            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeRequest() { UserId = "invitee3" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
-            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeInputModel() { UserId = "invitee4" });
+            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeRequest() { UserId = "invitee4" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
-            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeInputModel() { UserId = "invitee5" });
+            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeRequest() { UserId = "invitee5" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
-            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeInputModel() { UserId = "invitee6" });
+            _client.Post($"/api/meetings/{MEETING_ID}/invitees/", new CreateNewInviteeRequest() { UserId = "invitee6" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
         }
 
         private void 招待者が返信なしで追加されたことを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -129,7 +129,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void 招待者が不参加の返信をする()
         {
-            var rsvpNo = new InviteeRespondToRsvpInputModel() { Response = false };
+            var rsvpNo = new InviteeRespondToRsvpRequest() { Response = false };
             _client.Put($"/api/meetings/{MEETING_ID}/invitees/invitee1", rsvpNo);
             _client.AssertStatusCode(HttpStatusCode.NoContent);
         }
@@ -137,7 +137,7 @@ namespace SetupMeetings.FunctionalTests
         private void 不参加の返信をした招待者が不参加になっていることを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -150,7 +150,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void 招待者が参加の返信をする()
         {
-            var rsvpYes = new InviteeRespondToRsvpInputModel() { Response = false };
+            var rsvpYes = new InviteeRespondToRsvpRequest() { Response = false };
             _client.Put($"/api/meetings/{MEETING_ID}/invitees/invitee2", rsvpYes);
             _client.AssertStatusCode(HttpStatusCode.NoContent);
         }
@@ -158,7 +158,7 @@ namespace SetupMeetings.FunctionalTests
         private void 参加の返信をした招待者が参加者になっていることを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -171,7 +171,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void 残りの招待者が参加の返信をする()
         {
-            var rsvpYes = new InviteeRespondToRsvpInputModel() { Response = true };
+            var rsvpYes = new InviteeRespondToRsvpRequest() { Response = true };
             _client.Put($"/api/meetings/{MEETING_ID}/invitees/invitee3", rsvpYes);
             _client.AssertStatusCode(HttpStatusCode.NoContent);
             _client.Put($"/api/meetings/{MEETING_ID}/invitees/invitee4", rsvpYes);
@@ -185,7 +185,7 @@ namespace SetupMeetings.FunctionalTests
         private void 残りの招待者が参加者になっていることを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -197,14 +197,14 @@ namespace SetupMeetings.FunctionalTests
 
         private void 飛び込みの参加者を登録する()
         {
-            _client.Post($"/api/meetings/{MEETING_ID}/attendees/", new CreateNewAttendeeInputModel() { UserId = "attendee1" });
+            _client.Post($"/api/meetings/{MEETING_ID}/attendees/", new CreateNewAttendeeRequest() { UserId = "attendee1" });
             _client.AssertStatusCode(HttpStatusCode.NoContent);
         }
 
         private void 飛び込みの参加者が登録されたことを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -220,7 +220,7 @@ namespace SetupMeetings.FunctionalTests
         private void 参加者が参加をキャンセルされたことを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -248,7 +248,7 @@ namespace SetupMeetings.FunctionalTests
         private void 参加者が忘年会に出席したことを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -264,7 +264,7 @@ namespace SetupMeetings.FunctionalTests
         private void 参加者が忘年会の支払いをしたことを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -294,7 +294,7 @@ namespace SetupMeetings.FunctionalTests
         private void 残りの参加者が忘年会に出席したことを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}");
-            _client.AssertObjectWithStatus<MeetingViewModel>(
+            _client.AssertObjectWithStatus<MeetingResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MEETING_ID &&
@@ -303,7 +303,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void 忘年会の費用を登録する()
         {
-            var total = new MeetingPaymentInputModel() { TotalPrice = 30000 };
+            var total = new MeetingPaymentRequest() { TotalPrice = 30000 };
             _client.Put($"/api/meetings/{MEETING_ID}/invitees/invitee2/attend");
             _client.AssertStatusCode(HttpStatusCode.NoContent);
         }
@@ -311,7 +311,7 @@ namespace SetupMeetings.FunctionalTests
         private void 参加者全員分忘年会の費用が計算されていることを確認する()
         {
             _client.Get($"/api/meetings/{MEETING_ID}/payments");
-            _client.AssertObjectWithStatus<MeetingPaymentViewModel>(
+            _client.AssertObjectWithStatus<MeetingPaymentResponse>(
                 HttpStatusCode.OK,
                 m =>
                     m.TotalPrice == 2000 &&

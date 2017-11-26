@@ -1,6 +1,6 @@
 ﻿namespace SetupMeetings.WebApi.Models.Meetings
 {
-    public class CreateNewSponsorInputModel
+    public class CreateNewInviteeRequest
     {
         public string UserId { get; set; }
     }

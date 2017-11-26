@@ -2,9 +2,9 @@
 
 namespace SetupMeetings.WebApi.Models.Meetings
 {
-    public class MeetingPaymentViewModel
+    public class MeetingPaymentResponse
     {
         public decimal TotalPrice { get; set; }
-        public List<MeetingPaymentDetailViewModel> Details { get; set; }
+        public List<MeetingPaymentDetailResponse> Details { get; set; }
     }
 }
