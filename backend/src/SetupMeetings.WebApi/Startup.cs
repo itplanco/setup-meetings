@@ -45,6 +45,11 @@ namespace SetupMeetings.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(builder => 
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
