@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SetupMeetings.WebApi.Models
+namespace SetupMeetings.WebApi.Models.Meetings
 {
     public class InviteeRespondToRsvpInputModel
     {

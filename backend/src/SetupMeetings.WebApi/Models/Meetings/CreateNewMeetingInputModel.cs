@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SetupMeetings.WebApi.Models
+namespace SetupMeetings.WebApi.Models.Meetings
 {
     public class CreateNewMeetingInputModel
     {

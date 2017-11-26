@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SetupMeetings.FunctionalTests.Drivers;
 using SetupMeetings.WebApi;
-using SetupMeetings.WebApi.Models;
+using SetupMeetings.WebApi.Models.Meetings;
 using System;
 using System.Linq;
 using System.Net;

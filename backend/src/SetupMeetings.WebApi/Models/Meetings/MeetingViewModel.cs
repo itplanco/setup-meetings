@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SetupMeetings.WebApi.Models
+namespace SetupMeetings.WebApi.Models.Meetings
 {
     public class MeetingViewModel
     {

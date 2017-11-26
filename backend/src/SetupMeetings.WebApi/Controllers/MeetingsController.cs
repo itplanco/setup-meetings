@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SetupMeetings.WebApi.Models;
+using SetupMeetings.WebApi.Models.Meetings;
 using System;
 using System.Collections.Generic;
 using System.Net;
