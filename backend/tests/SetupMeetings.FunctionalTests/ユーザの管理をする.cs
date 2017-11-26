@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SetupMeetings.FunctionalTests.Drivers;
 using SetupMeetings.WebApi;
+using SetupMeetings.WebApi.Models.Users;
 using System;
+using System.Net;
 
 namespace SetupMeetings.FunctionalTests
 {
@@ -12,6 +14,7 @@ namespace SetupMeetings.FunctionalTests
     {
         private TestServer _server;
         private HttpClientWrapper _client;
+        private string userId;
 
         [TestInitialize]
         public void Setup()
@@ -30,29 +33,50 @@ namespace SetupMeetings.FunctionalTests
         public void ユーザを新規に作成し削除する()
         {
             ユーザを追加する();
-            ユーザのパスワードを変更する();
+            ユーザのメールアドレスを変更する();
             ユーザの所属を変更する();
             ユーザを削除する();
         }
 
         private void ユーザを追加する()
         {
-            throw new NotImplementedException();
+            var user = new CreateNewUserRequest()
+            {
+                Name = "Test Name",
+                EmailAddress = "test@example.com",
+            };
+            _client.Post("/api/users", user);
+            _client.AssertCreatedStatusCode(out var location);
+            var split = location.AbsolutePath.Split('/');
+            userId = split[split.Length - 1];
         }
 
-        private void ユーザのパスワードを変更する()
+        private void ユーザのメールアドレスを変更する()
         {
-            throw new NotImplementedException();
+            _client.Post($"/api/users/{userId}", new ChangeEmailAddressRequest() { NewEmailAddress = "test2@example.com" });
+            _client.AssertStatusCode(HttpStatusCode.Accepted);
+            _client.Get($"/api/users/{userId}");
+            _client.AssertObjectWithStatus<UserResponse>(
+                HttpStatusCode.OK,
+                m => m.EmailAddress == "test2@example.com");
         }
 
         private void ユーザの所属を変更する()
         {
-            throw new NotImplementedException();
+            _client.Put($"/api/users/{userId}", new ChangeOrganizationRequest() { NewOrganizationId = "2" });
+            _client.AssertStatusCode(HttpStatusCode.Accepted);
+            _client.Get($"/api/users/{userId}");
+            _client.AssertObjectWithStatus<UserResponse>(
+                HttpStatusCode.OK,
+                m => m.OrganizationName == "Organization Name 2");
         }
 
         private void ユーザを削除する()
         {
-            throw new NotImplementedException();
+            _client.Delete($"/api/users/{userId}");
+            _client.AssertStatusCode(HttpStatusCode.Accepted);
+            _client.Get($"/api/users/{userId}");
+            _client.AssertStatusCode(HttpStatusCode.NotFound);
         }
     }
 }

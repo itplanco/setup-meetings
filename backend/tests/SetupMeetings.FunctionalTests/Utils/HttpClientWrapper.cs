@@ -2,9 +2,11 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace SetupMeetings.FunctionalTests.Drivers
 {
@@ -27,7 +29,22 @@ namespace SetupMeetings.FunctionalTests.Drivers
         {
             var content = new StringContent(JsonConvert.SerializeObject(obj));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpClient.PostAsync(uri, content).ContinueWith(t => responseMessages.Add(t.Result));
+            httpClient.PostAsync(uri, content).ContinueWith(Handle);
+        }
+
+        private void Handle(Task<HttpResponseMessage> task)
+        {
+            try
+            {
+                responseMessages.Add(task.Result);
+            }
+            catch(AggregateException e)
+            {
+                foreach(var ex in e.Flatten().InnerExceptions)
+                {
+                    Trace.Fail(ex.Message, ex.StackTrace);
+                }
+            }
         }
 
         public void Put(string uri)
@@ -58,17 +75,24 @@ namespace SetupMeetings.FunctionalTests.Drivers
             return response;
         }
 
+        public void AssertStatusCode(HttpStatusCode status)
+        {
+            var message = TakeMessage();
+            Assert.AreEqual(status, message.StatusCode);
+        }
+
+        public void AssertCreatedStatusCode(out Uri uri)
+        {
+            var message = TakeMessage();
+            Assert.AreEqual(HttpStatusCode.Created, message.StatusCode);
+            uri = message.Headers.Location;
+        }
+
         public void AssertObjectWithStatus<T>(HttpStatusCode status, Predicate<T> pred)
         {
             var message = TakeMessage();
             T obj = JsonConvert.DeserializeObject<T>(message.Content.ReadAsStringAsync().Result);
             Assert.IsTrue(pred.Invoke(obj));
-            Assert.AreEqual(status, message.StatusCode);
-        }
-
-        public void AssertStatusCode(HttpStatusCode status)
-        {
-            var message = TakeMessage();
             Assert.AreEqual(status, message.StatusCode);
         }
     }
