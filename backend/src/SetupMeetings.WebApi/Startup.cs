@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
+using System.IO;
 
 namespace SetupMeetings.WebApi
 {
@@ -45,21 +46,35 @@ namespace SetupMeetings.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(builder => 
+            app.UseCors(builder =>
                 builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
-            app.UseMvc();
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseMvc();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "e-幹事 API");
             });
+
+            // Routing for angular2
+            app.Use(async (context, next) =>
+            {
+                await next();
+
+                if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
+                {
+                    context.Request.Path = "/index.html";
+                    context.Response.StatusCode = 200;
+                    await next();
+                }
+            });
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
         }
     }
 }
