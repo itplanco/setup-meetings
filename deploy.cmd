@@ -67,14 +67,30 @@ SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
 echo Handling ASP.NET Core Web Application deployment.
 
 :: 1. Restore nuget packages
-call :ExecuteCmd dotnet restore "%DEPLOYMENT_SOURCE%\backend\SetupMeetings.sln"
+call :ExecuteCmd dotnet restore "%DEPLOYMENT_SOURCE%\backend\src\SetupMeetings.WebApi\SetupMeetings.WebApi.csproj"
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Build and publish
 call :ExecuteCmd dotnet publish "%DEPLOYMENT_SOURCE%\backend\src\SetupMeetings.WebApi\SetupMeetings.WebApi.csproj" --output "%DEPLOYMENT_TEMP%" --configuration Release
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 3. KuduSync
+echo Handling Angular2 deployment.
+pushd "%DEPLOYMENT_SOURCE%\frontend\SetupMeeting"
+
+:: 3. Install npm packages
+call :ExecuteCmd npm install
+IF !ERRORLEVEL! NEQ 0 goto error
+
+:: 4. Run npm command (build)
+call :ExecuteCmd npm run build
+IF !ERRORLEVEL! NEQ 0 goto error
+
+:: 5. Copy dist folder
+call :ExecuteCmd xcopy dist %DEPLOYMENT_TEMP% /Y
+IF !ERRORLEVEL! NEQ 0 goto error
+popd
+
+:: 6. KuduSync
 call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
 IF !ERRORLEVEL! NEQ 0 goto error
 
