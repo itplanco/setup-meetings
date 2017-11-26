@@ -1,0 +1,62 @@
+<div>
+    <div>{{meeting.name}}</div>
+    <div *ngIf="meeting.status == 0">
+        <input type="button" value="招待者一覧" (click)="onClick()">
+    </div>
+    <div *ngIf="meeting.status == 1">
+        <input type="button" value="参加者一覧" (click)="onClick()">
+    </div>
+    <div *ngIf="meeting.status == 0">
+        <table border="1">
+            <tr>
+                <td>
+                    <div>名前</div>
+                </td>
+                <td>
+                    <div>出欠</div>
+                </td>
+            </tr>
+            <tr *ngFor="let member of meeting.invitees">
+                <td>
+                    <div>{{member.userName}}</div>
+                </td>
+                <td>
+                    <div *ngIf="member.rsvp" (click)="onInviteClick(member,false)">〇</div>
+                    <div *ngIf="!member.rsvp" (click)="onInviteClick(member,true)">✖</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div *ngIf="meeting.status == 1">
+        <table border="1">
+            <tr>
+                <td>
+                    <div>名前</div>
+                </td>
+                <td>
+                    <div>出席</div>
+                </td>
+                <td>
+                    <div>徴収</div>
+                </td>
+            </tr>
+            <tr *ngFor="let member of meeting.attendees">
+                <td>
+                    <div>{{member.userName}}</div>
+                </td>
+                <td>
+                    <div *ngIf="member.attend" (click)="onAttendClick(member,false)">〇</div>
+                    <div *ngIf="!member.attend" (click)="onAttendClick(member,true)">✖</div>
+                </td>
+                <td>
+                    <div *ngIf="member.payed" (click)="onPayedClick(member,false)">〇</div>
+                    <div *ngIf="!member.payed" (click)="onPayedClick(member,true)">✖</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <payment-pagearea [meetingId]="meetingId"></payment-pagearea>
+    </div>
+</div>

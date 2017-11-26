@@ -1,0 +1,12 @@
+{
+    "totalPrice": 10000,
+    "details": [
+      {
+        "userId": "1",
+        "userName": "誰それ何某",
+        "organizationId": "1",
+        "organizationName": "株式会社 なんちゃら",
+        "price": 2000
+      }
+    ]
+  }
