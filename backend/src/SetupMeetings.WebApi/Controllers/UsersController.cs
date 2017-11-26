@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SetupMeetings.WebApi.Models.Users;
-using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -12,7 +11,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(UsersResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public IActionResult GetSponsors(string meetingId)
+        public IActionResult GetAllUsers()
         {
             return Ok(new UsersResponse()
             {
@@ -33,7 +32,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{userId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(UserResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public IActionResult GetSponsor(string meetingId, string userId)
+        public IActionResult GetUser(string userId)
         {
             return Ok(new UserResponse()
             {
@@ -45,20 +44,36 @@ namespace SetupMeetings.WebApi.Controllers
             });
         }
 
-        [HttpPost("{meetingId}/sponsors")]
+        [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult AddSponsor(string meetingId, [FromBody]CreateNewUserRequest newInvitee)
+        public IActionResult CreateNewUser([FromBody]CreateNewUserRequest newUser)
         {
-            return CreatedAtAction(nameof(GetSponsor), new { meetingId, userId = "1" });
+            return CreatedAtAction(nameof(GetUser), new { userId = "1" });
         }
 
-        [HttpDelete("{meetingId}/sponsors/{userId}")]
+        [HttpPut("{userId}/emailaddress")]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public IActionResult ChangeEmailAddress(string userId, [FromBody]ChangeEmailAddressRequest newEmailRequest)
+        {
+            return AcceptedAtAction(nameof(GetUser), new { userId = "1" });
+        }
+
+        [HttpPut("{userId}/organization")]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public IActionResult ChangeOrganization(string userId, [FromBody]ChangeOrganizationRequest newOrganizationRequest)
+        {
+            return AcceptedAtAction(nameof(GetUser), new { userId = "1" });
+        }
+
+        [HttpDelete("{userId}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult DeleteSponsor(string meetingId, int userId)
+        public IActionResult DeleteUser(string userId)
         {
-            return Ok();
+            return NoContent();
         }
     }
 }
