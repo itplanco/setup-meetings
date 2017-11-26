@@ -86,7 +86,7 @@ call :ExecuteCmd npm run build
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 5. Copy dist folder
-call :ExecuteCmd xcopy dist %DEPLOYMENT_TEMP% /Y
+call :ExecuteCmd xcopy dist "%DEPLOYMENT_TEMP%\wwwroot" /Y
 IF !ERRORLEVEL! NEQ 0 goto error
 popd
 
