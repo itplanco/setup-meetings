@@ -303,7 +303,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void –Y”N‰ï‚Ì”ï—p‚ð“o˜^‚·‚é()
         {
-            var total = new MeetingPaymentRequest() { TotalPrice = 30000 };
+            var total = new UpdatePaymentInfoRequest() { TotalPrice = 30000 };
             _client.Put($"/api/meetings/{MEETING_ID}/invitees/invitee2/attend");
             _client.AssertStatusCode(HttpStatusCode.NoContent);
         }

@@ -2,7 +2,7 @@
 
 namespace SetupMeetings.WebApi.Models.Meetings
 {
-    public class MeetingPaymentRequest
+    public class UpdatePaymentInfoRequest
     {
         [Required]
         public decimal TotalPrice { get; set; }

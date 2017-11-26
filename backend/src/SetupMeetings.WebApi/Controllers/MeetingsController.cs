@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SetupMeetings.WebApi.Models.Meetings;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.Net;
 
 namespace SetupMeetings.WebApi.Controllers
 {
+    [Produces("application/json")]
     [Route("api/meetings")]
     public class MeetingsController : ControllerBase
     {
         [HttpGet("{meetingId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MeetingResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getMeetingById")]
         public IActionResult GetMeeting(string meetingId)
         {
             return Ok(new MeetingResponse()
@@ -57,7 +60,8 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult Create([FromBody] CreateNewMeetingRequest newMeeting)
+        [SwaggerOperation("createNewMeeting")]
+        public IActionResult CreateNewMeeting([FromBody] CreateNewMeetingRequest newMeeting)
         {
             return CreatedAtAction(nameof(GetMeeting), new { meetingId = "1" });
         }
@@ -65,6 +69,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{meetingId}/sponsors")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(SponsorsResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getSponsors")]
         public IActionResult GetSponsors(string meetingId)
         {
             return Ok(new SponsorsResponse()
@@ -85,6 +90,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{meetingId}/sponsors/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(SponsorResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getSponsorById")]
         public IActionResult GetSponsor(string meetingId, string userId)
         {
             return Ok(new SponsorResponse()
@@ -99,6 +105,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost("{meetingId}/sponsors")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [SwaggerOperation("addSponsor")]
         public IActionResult AddSponsor(string meetingId, [FromBody]CreateNewSponsorRequest newInvitee)
         {
             return CreatedAtAction(nameof(GetSponsor), new { meetingId, userId = "1" });
@@ -107,6 +114,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpDelete("{meetingId}/sponsors/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [SwaggerOperation("deleteSponsor")]
         public IActionResult DeleteSponsor(string meetingId, string userId)
         {
             return NoContent();
@@ -115,6 +123,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{meetingId}/invitees")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(InviteesResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getInvitees")]
         public IActionResult GetInvitees(string meetingId)
         {
             return Ok(new InviteesResponse()
@@ -136,6 +145,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{meetingId}/invitees/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(InviteeResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getInviteesById")]
         public IActionResult GetInvitee(string meetingId, string userId)
         {
             return Ok(new InviteeResponse()
@@ -151,6 +161,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost("{meetingId}/invitees")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [SwaggerOperation("addInvitee")]
         public IActionResult AddInvitee(string meetingId, [FromBody]CreateNewInviteeRequest newInvitee)
         {
             return CreatedAtAction(nameof(GetInvitee), new { meetingId, userId = "1" });
@@ -159,6 +170,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpDelete("{meetingId}/invitees/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [SwaggerOperation("deleteInvitee")]
         public IActionResult DeleteInvitee(string meetingId, string userId)
         {
             return NoContent();
@@ -167,6 +179,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPut("{meetingId}/invitees/{userId}/rsvp")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [SwaggerOperation("updateInviteeRsvp")]
         public IActionResult InviteeRespondToRsvp(string meetingId, string userId, [FromBody]InviteeRespondToRsvpRequest response)
         {
             return AcceptedAtAction(nameof(GetInvitee), new { meetingId, userId });
@@ -175,6 +188,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{meetingId}/attendees")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AttendeesResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getAttendees")]
         public IActionResult GetAttendees(string meetingId)
         {
             return Ok(new AttendeesResponse()
@@ -196,6 +210,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{meetingId}/attendees/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(AttendeeResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getAttendeesById")]
         public IActionResult GetAttendee(string meetingId, string userId)
         {
             return Ok(new AttendeeResponse()
@@ -211,6 +226,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost("{meetingId}/attendees")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [SwaggerOperation("addAttendee")]
         public IActionResult AddAttendee(string meetingId, [FromBody]CreateNewAttendeeRequest newAttendee)
         {
             return CreatedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 });
@@ -219,7 +235,8 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPut("{meetingId}/attendees/{userId}/attend")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public IActionResult AtteneeAttends(string meetingId, string userId)
+        [SwaggerOperation("attendeeAttend")]
+        public IActionResult AtteneeAttend(string meetingId, string userId)
         {
             return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 });
         }
@@ -227,6 +244,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPut("{meetingId}/attendees/{userId}/paid")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("attendeePaid")]
         public IActionResult AtteneePaid(string meetingId, string userId)
         {
             return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 });
@@ -235,7 +253,8 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpDelete("{meetingId}/attendees/{userId}")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult RemoveAteendee(string meetingId, string userId)
+        [SwaggerOperation("deleteAttendee")]
+        public IActionResult DeleteAteendee(string meetingId, string userId)
         {
             return NoContent();
         }
@@ -243,6 +262,7 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpGet("{meetingId}/payment")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MeetingPaymentResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [SwaggerOperation("getPayment")]
         public IActionResult GetPaymentInfo(string meetingId)
         {
             return Ok(new MeetingPaymentResponse()
@@ -265,7 +285,8 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPut("{meetingId}/payment")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public IActionResult UpdateTotalPayment(string meetingId, [FromBody] MeetingPaymentRequest payment)
+        [SwaggerOperation("updatePaymentInfo")]
+        public IActionResult UpdatePaymentInfo(string meetingId, [FromBody] UpdatePaymentInfoRequest payment)
         {
             return NoContent();
         }
