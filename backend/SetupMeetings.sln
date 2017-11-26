@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SetupMeetings.Commands", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SetupMeetings.Queries", "src\SetupMeetings.Queries\SetupMeetings.Queries.csproj", "{6A15470B-3204-4248-8F47-E1D6D5D86B2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupMeetings.Common", "src\SetupMeetings.Common\SetupMeetings.Common.csproj", "{BFD239B6-90AF-4644-B578-441733C43F71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SetupMeetings.Infrastructure", "src\SetupMeetings.Infrastructure\SetupMeetings.Infrastructure.csproj", "{BFD239B6-90AF-4644-B578-441733C43F71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
