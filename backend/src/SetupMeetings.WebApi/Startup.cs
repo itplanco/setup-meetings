@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SetupMeetings.WebApi.Services;
 using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
 
@@ -24,6 +25,8 @@ namespace SetupMeetings.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IUsersService, UsersService>();
+
             services.AddMvc();
 
             services.AddSwaggerGen(c =>

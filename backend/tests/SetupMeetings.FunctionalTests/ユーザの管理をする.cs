@@ -53,7 +53,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void ユーザのメールアドレスを変更する()
         {
-            _client.Post($"/api/users/{userId}", new ChangeEmailAddressRequest() { NewEmailAddress = "test2@example.com" });
+            _client.Put($"/api/users/{userId}/emailaddress", new ChangeEmailAddressRequest() { NewEmailAddress = "test2@example.com" });
             _client.AssertStatusCode(HttpStatusCode.Accepted);
             _client.Get($"/api/users/{userId}");
             _client.AssertObjectWithStatus<UserResponse>(
