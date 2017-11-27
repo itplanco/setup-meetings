@@ -1,6 +1,16 @@
-﻿namespace SetupMeetings.Infrastructure.Messaging
+﻿using System;
+
+namespace SetupMeetings.Infrastructure.Messaging
 {
-    public class Envelope<T>
+    public abstract class Envelope
+    {
+        public static Envelope<T> Create<T>(T body)
+        {
+            return new Envelope<T>(body);
+        }
+    }
+
+    public class Envelope<T> : Envelope
     {
         public Envelope(T body)
         {

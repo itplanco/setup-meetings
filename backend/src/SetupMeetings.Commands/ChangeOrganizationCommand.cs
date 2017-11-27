@@ -1,6 +1,10 @@
-﻿namespace SetupMeetings.Commands
+﻿using SetupMeetings.Infrastructure.Messaging;
+using System;
+
+namespace SetupMeetings.Commands
 {
-    public class ChangeOrganizationCommand
+    public class ChangeOrganizationCommand : ICommand
     {
+        public Guid Id { get; }
     }
 }

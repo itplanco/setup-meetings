@@ -1,4 +1,5 @@
 ﻿using SetupMeetings.Commands;
+using SetupMeetings.Infrastructure.Messaging;
 using SetupMeetings.Queries;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,6 +23,13 @@ namespace SetupMeetings.WebApi.Services
 
     class UsersService : IUsersService
     {
+        private ICommandBus _bus;
+
+        public UsersService(ICommandBus bus)
+        {
+            _bus = bus;
+        }
+
         public User GetUserById(string userId)
         {
             return new User()

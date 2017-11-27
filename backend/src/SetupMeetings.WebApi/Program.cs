@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("SetupMeetings.WebApi.Tests")]
 namespace SetupMeetings.WebApi
 {
     public class Program

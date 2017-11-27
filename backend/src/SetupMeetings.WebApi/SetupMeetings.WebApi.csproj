@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SetupMeetings.Commands\SetupMeetings.Commands.csproj" />
+    <ProjectReference Include="..\SetupMeetings.Infrastructure\SetupMeetings.Infrastructure.csproj" />
     <ProjectReference Include="..\SetupMeetings.Queries\SetupMeetings.Queries.csproj" />
   </ItemGroup>
 
