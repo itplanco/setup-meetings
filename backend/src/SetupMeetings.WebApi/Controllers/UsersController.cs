@@ -54,7 +54,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("createNewUser")]
         public IActionResult CreateNewUser([FromBody]CreateNewUserRequest newUser)
         {
-            return CreatedAtAction(nameof(GetUser), new { userId = "1" });
+            return CreatedAtAction(nameof(GetUser), new { userId = "1" }, null);
         }
 
         [HttpPut("{userId}/emailaddress")]
@@ -63,7 +63,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("changeUserEmailAddress")]
         public IActionResult ChangeEmailAddress(string userId, [FromBody]ChangeEmailAddressRequest newEmailRequest)
         {
-            return AcceptedAtAction(nameof(GetUser), new { userId = "1" });
+            return AcceptedAtAction(nameof(GetUser), new { userId = "1" }, null);
         }
 
         [HttpPut("{userId}/organization")]
@@ -72,7 +72,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("changeUserOrganization")]
         public IActionResult ChangeOrganization(string userId, [FromBody]ChangeOrganizationRequest newOrganizationRequest)
         {
-            return AcceptedAtAction(nameof(GetUser), new { userId = "1" });
+            return AcceptedAtAction(nameof(GetUser), new { userId = "1" }, null);
         }
 
         [HttpDelete("{userId}")]

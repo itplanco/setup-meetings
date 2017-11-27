@@ -66,7 +66,8 @@ namespace SetupMeetings.FunctionalTests
             newMeeting.Name = "忘年会";
             newMeeting.OrganizerUserId = "organizer1";
             _client.Post("/api/meetings", newMeeting);
-            _client.AssertStatusCode(HttpStatusCode.NoContent);
+            _client.AssertCreatedStatusCode(out var uri);
+            Assert.AreEqual("/api/meetings/1", uri.AbsolutePath);
         }
 
         private void 忘年会が作成されたことを確認する()

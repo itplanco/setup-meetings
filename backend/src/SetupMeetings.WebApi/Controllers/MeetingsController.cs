@@ -63,7 +63,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("createNewMeeting")]
         public IActionResult CreateNewMeeting([FromBody] CreateNewMeetingRequest newMeeting)
         {
-            return CreatedAtAction(nameof(GetMeeting), new { meetingId = "1" });
+            return CreatedAtAction(nameof(GetMeeting), new { meetingId = "1" }, null);
         }
 
         [HttpGet("{meetingId}/sponsors")]
@@ -108,7 +108,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("addSponsor")]
         public IActionResult AddSponsor(string meetingId, [FromBody]CreateNewSponsorRequest newInvitee)
         {
-            return CreatedAtAction(nameof(GetSponsor), new { meetingId, userId = "1" });
+            return CreatedAtAction(nameof(GetSponsor), new { meetingId, userId = "1" }, null);
         }
 
         [HttpDelete("{meetingId}/sponsors/{userId}")]
@@ -164,7 +164,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("addInvitee")]
         public IActionResult AddInvitee(string meetingId, [FromBody]CreateNewInviteeRequest newInvitee)
         {
-            return CreatedAtAction(nameof(GetInvitee), new { meetingId, userId = "1" });
+            return CreatedAtAction(nameof(GetInvitee), new { meetingId, userId = "1" }, null);
         }
 
         [HttpDelete("{meetingId}/invitees/{userId}")]
@@ -182,7 +182,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("updateInviteeRsvp")]
         public IActionResult InviteeRespondToRsvp(string meetingId, string userId, [FromBody]InviteeRespondToRsvpRequest response)
         {
-            return AcceptedAtAction(nameof(GetInvitee), new { meetingId, userId });
+            return AcceptedAtAction(nameof(GetInvitee), new { meetingId, userId }, null);
         }
 
         [HttpGet("{meetingId}/attendees")]
@@ -229,7 +229,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("addAttendee")]
         public IActionResult AddAttendee(string meetingId, [FromBody]CreateNewAttendeeRequest newAttendee)
         {
-            return CreatedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 });
+            return CreatedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 }, null);
         }
 
         [HttpPut("{meetingId}/attendees/{userId}/attend")]
@@ -238,7 +238,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("attendeeAttend")]
         public IActionResult AtteneeAttend(string meetingId, string userId)
         {
-            return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 });
+            return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 }, null);
         }
 
         [HttpPut("{meetingId}/attendees/{userId}/paid")]
@@ -247,7 +247,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("attendeePaid")]
         public IActionResult AtteneePaid(string meetingId, string userId)
         {
-            return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 });
+            return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 }, null);
         }
 
         [HttpDelete("{meetingId}/attendees/{userId}")]
