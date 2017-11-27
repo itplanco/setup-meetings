@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SetupMeetings.Infrastructure.Messaging
+﻿namespace SetupMeetings.Infrastructure.Messaging
 {
     public abstract class Envelope
     {

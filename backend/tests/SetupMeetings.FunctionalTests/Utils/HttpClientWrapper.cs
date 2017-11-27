@@ -32,36 +32,36 @@ namespace SetupMeetings.FunctionalTests.Drivers
             httpClient.PostAsync(uri, content).ContinueWith(Handle);
         }
 
-        private void Handle(Task<HttpResponseMessage> task)
-        {
-            try
-            {
-                responseMessages.Add(task.Result);
-            }
-            catch(AggregateException e)
-            {
-                foreach(var ex in e.Flatten().InnerExceptions)
-                {
-                    Trace.Fail(ex.Message, ex.StackTrace);
-                }
-            }
-        }
-
         public void Put(string uri)
         {
-            httpClient.PutAsync(uri, null).ContinueWith(t => responseMessages.Add(t.Result));
+            httpClient.PutAsync(uri, null).ContinueWith(Handle);
         }
 
         public void Put<T>(string uri, T obj)
         {
             var content = new StringContent(JsonConvert.SerializeObject(obj));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            httpClient.PutAsync(uri, content).ContinueWith(t => responseMessages.Add(t.Result));
+            httpClient.PutAsync(uri, content).ContinueWith(Handle);
         }
 
         public void Delete(string uri)
         {
-            httpClient.DeleteAsync(uri).ContinueWith(t => responseMessages.Add(t.Result));
+            httpClient.DeleteAsync(uri).ContinueWith(Handle);
+        }
+
+        private void Handle(Task<HttpResponseMessage> task)
+        {
+            try
+            {
+                responseMessages.Add(task.Result);
+            }
+            catch (AggregateException e)
+            {
+                foreach (var ex in e.Flatten().InnerExceptions)
+                {
+                    Trace.TraceError(ex.ToString());
+                }
+            }
         }
 
         private HttpResponseMessage TakeMessage()
