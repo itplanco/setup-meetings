@@ -1,7 +1,9 @@
-﻿namespace SetupMeetings.Commands.Users
+﻿using System;
+
+namespace SetupMeetings.Commands.Users
 {
     public class ChangeOrganizationCommand : UserCommand
     {
-        public string NewOrganizationId { get; set; }
+        public Guid NewOrganizationId { get; set; }
     }
 }
