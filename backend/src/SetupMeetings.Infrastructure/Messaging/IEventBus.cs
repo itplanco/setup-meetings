@@ -2,7 +2,7 @@
 
 namespace SetupMeetings.Infrastructure.Messaging
 {
-    interface IEventBus
+    public interface IEventBus
     {
         void Publish(Envelope<IEvent> @event);
         void Publish(IEnumerable<Envelope<IEvent>> events);

@@ -4,6 +4,6 @@ namespace SetupMeetings.Infrastructure.Messaging
 {
     public interface IEvent
     {
-        Guid Id { get; }
+        Guid SourceId { get; }
     }
 }
