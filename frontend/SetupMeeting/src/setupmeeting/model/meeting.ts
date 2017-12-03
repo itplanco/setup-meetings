@@ -1,4 +1,6 @@
-export class Meeting{
+import * as models                                           from '../model/models';
+
+export class Meeting implements models.MeetingResponse{
     meetingId:string;
     name:string;
     startAt:Date;
