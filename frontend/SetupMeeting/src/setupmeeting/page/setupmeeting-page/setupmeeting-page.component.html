@@ -1,12 +1,12 @@
 <div>
     <div>{{meeting.name}}</div>
-    <div *ngIf="meeting.status == 0">
+    <div *ngIf="status == 0">
         <input type="button" value="招待者一覧" (click)="onClick()">
     </div>
-    <div *ngIf="meeting.status == 1">
+    <div *ngIf="status == 1">
         <input type="button" value="参加者一覧" (click)="onClick()">
     </div>
-    <div *ngIf="meeting.status == 0">
+    <div *ngIf="status == 0">
         <table border="1">
             <tr>
                 <td>
@@ -28,7 +28,7 @@
         </table>
     </div>
 
-    <div *ngIf="meeting.status == 1">
+    <div *ngIf="status == 1">
         <table border="1">
             <tr>
                 <td>
@@ -50,13 +50,13 @@
                     <div *ngIf="!member.attend" (click)="onAttendClick(member,true)">✖</div>
                 </td>
                 <td>
-                    <div *ngIf="member.payed" (click)="onPayedClick(member,false)">〇</div>
-                    <div *ngIf="!member.payed" (click)="onPayedClick(member,true)">✖</div>
+                    <div *ngIf="member.paid" (click)="onPayedClick(member,false)">〇</div>
+                    <div *ngIf="!member.paid" (click)="onPayedClick(member,true)">✖</div>
                 </td>
             </tr>
         </table>
     </div>
-    <div>
+    <div *ngIf="status == 1">
         <payment-pagearea [meetingId]="meetingId"></payment-pagearea>
     </div>
 </div>

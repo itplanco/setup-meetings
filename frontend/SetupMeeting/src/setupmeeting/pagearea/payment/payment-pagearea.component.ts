@@ -1,7 +1,8 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { Payment } from '../../model/payments';
 import { MeetingSevice } from '../../service/meeting.service';
-
+import { MeetingsApi } from '../../index';
+import * as models                                           from '../../model/models';
 @Component({
     selector: 'payment-pagearea',
     templateUrl: './payment-pagearea.component.html',
@@ -9,10 +10,11 @@ import { MeetingSevice } from '../../service/meeting.service';
 })
 export class PaymentPageAreaComponent {
     @Input() meetingId:string = "";
-    payment:Payment = new Payment();
+    // payment:Payment = new Payment();
+    payment:models.MeetingPaymentResponse = {};
     displayPayment:boolean = false;
 
-    constructor(private meetingSevice:MeetingSevice){
+    constructor(private meetingSevice:MeetingSevice,private meetingsApi:MeetingsApi){
 
     }
 
@@ -24,19 +26,33 @@ export class PaymentPageAreaComponent {
     }
 
     getPayment(id:string){
-        this.meetingSevice.getPayment(id).then(response => {
+        // this.meetingSevice.getPayment(id).then(response => {
+        //     this.payment = response;
+        //     if(!this.payment){
+        //         this.payment = new Payment();
+        //         this.displayPayment = false;
+        //     }else{
+        //         this.displayPayment = true;
+        //     }
+        // })
+        this.meetingsApi.getPayment(id).subscribe(response =>{
             this.payment = response;
-            if(!this.payment){
-                this.payment = new Payment();
+                if(!this.payment){
+                this.payment = {};
                 this.displayPayment = false;
             }else{
                 this.displayPayment = true;
             }
-        })
+        });
+        
     }
 
     onClick(){
-        this.meetingSevice.putPayment(this.payment);
-        this.getPayment(this.meetingId);
+        // this.meetingSevice.putPayment(this.payment);
+        // this.getPayment(this.meetingId);
+        var requestModel = {"totalPrice": this.payment.totalPrice}
+        this.meetingsApi.updatePaymentInfo(this.meetingId,requestModel).subscribe(response => {
+            this.getPayment(this.meetingId);
+        });
     }
 }
