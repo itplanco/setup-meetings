@@ -16,8 +16,8 @@
         }
 
         public T Body { get; }
-        public string CorrelationId { get; internal set; }
-        public string MessageId { get; internal set; }
+        public string CorrelationId { get; set; }
+        public string MessageId { get; set; }
 
         public Envelope<T> Create(T body)
         {

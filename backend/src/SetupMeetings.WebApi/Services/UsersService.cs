@@ -43,8 +43,9 @@ namespace SetupMeetings.WebApi.Services
 
         public async Task<Guid> Create(CreateUserCommand command)
         {
+            var awaiter = _eventAwaiter.WaitForMessage<UserCreatedEvent>(command.Id, TimeSpan.FromSeconds(1));
             _bus.Send(Envelope.Create((ICommand)command));
-            var result = await _eventAwaiter.WaitForMessage<UserCreatedEvent>(command.Id, TimeSpan.FromSeconds(1));
+            var result = await awaiter;
             return result.SourceId;
         }
 

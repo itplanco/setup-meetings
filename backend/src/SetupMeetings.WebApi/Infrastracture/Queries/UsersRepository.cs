@@ -6,7 +6,7 @@ using SetupMeetings.Queries.Common;
 
 namespace SetupMeetings.WebApi.Infrastracture.Queries
 {
-    public class UserRepository : IUsersRepository
+    public class UsersRepository : IUsersRepository
     {
         private List<User> _userList = new List<User>()
         {

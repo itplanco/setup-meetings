@@ -3,6 +3,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SetupMeetings.Commands.Users;
+using SetupMeetings.Infrastructure.EventSourcing;
+using SetupMeetings.Infrastructure.Messaging;
+using SetupMeetings.Queries.Users;
+using SetupMeetings.WebApi.Infrastracture.EventSourcing;
+using SetupMeetings.WebApi.Infrastracture.Messaging;
+using SetupMeetings.WebApi.Infrastracture.Queries;
 using SetupMeetings.WebApi.Services;
 using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
@@ -25,6 +32,12 @@ namespace SetupMeetings.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IEventSourcedRepository<UserAggregate>, EventSourcedRepository<UserAggregate>>();
+            services.AddSingleton<ICommandBus, CommandBus>();
+            services.AddSingleton<EventDispatcher>();
+            services.AddSingleton<IEventBus, EventBus>();
+            services.AddTransient<IEventAwaiter, EventAwaiter>();
+            services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IUsersService, UsersService>();
 
             services.AddMvc();
