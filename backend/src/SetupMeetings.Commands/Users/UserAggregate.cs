@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace SetupMeetings.Commands
+namespace SetupMeetings.Commands.Users
 {
     public class UserAggregate : EventSourced
     {
-        private Guid _id;
         private string _name;
         private string _emailAddress;
         private Guid _organizationId;

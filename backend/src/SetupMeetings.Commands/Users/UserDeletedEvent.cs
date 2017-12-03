@@ -1,6 +1,6 @@
 ﻿using SetupMeetings.Infrastructure.EventSourcing;
 
-namespace SetupMeetings.Commands
+namespace SetupMeetings.Commands.Users
 {
     public class UserDeletedEvent : VersionedEvent
     {

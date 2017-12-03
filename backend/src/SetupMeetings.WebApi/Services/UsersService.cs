@@ -1,4 +1,4 @@
-﻿using SetupMeetings.Commands;
+﻿using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.Messaging;
 using SetupMeetings.Queries;
 using System.Collections.Generic;
@@ -65,6 +65,7 @@ namespace SetupMeetings.WebApi.Services
 
         public Task<CreateUserCommandResult> Create(CreateUserCommand command)
         {
+            _bus.Send(Envelope.Create((ICommand)command));
             return Task.FromResult(new CreateUserCommandResult()
             {
                 UserId = "1"

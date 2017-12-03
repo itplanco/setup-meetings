@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SetupMeetings.Commands;
+using SetupMeetings.Commands.Users;
 using SetupMeetings.Queries;
 using SetupMeetings.WebApi.Models.Users;
 using SetupMeetings.WebApi.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -115,7 +116,7 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("deleteUser")]
         public async Task<IActionResult> DeleteUserAsync(string userId)
         {
-            await _service.Process(new DeleteUserCommand() { UserId = userId }).ConfigureAwait(false);
+            await _service.Process(new DeleteUserCommand() { UserId = new Guid(userId) }).ConfigureAwait(false);
             return NoContent();
         }
     }

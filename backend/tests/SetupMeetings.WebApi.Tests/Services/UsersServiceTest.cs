@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using SetupMeetings.Commands;
+using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.Messaging;
 
 namespace SetupMeetings.WebApi.Services
