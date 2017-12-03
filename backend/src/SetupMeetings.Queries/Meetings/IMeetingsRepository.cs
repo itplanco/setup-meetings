@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace SetupMeetings.Queries
+namespace SetupMeetings.Queries.Meetings
 {
     public interface IMeetingsRepository
     {

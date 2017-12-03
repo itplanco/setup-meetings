@@ -1,4 +1,4 @@
-﻿namespace SetupMeetings.Queries
+﻿namespace SetupMeetings.Queries.Common
 {
     public class Organization
     {

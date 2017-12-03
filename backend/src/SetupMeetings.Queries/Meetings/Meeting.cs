@@ -1,4 +1,4 @@
-﻿namespace SetupMeetings.Queries
+﻿namespace SetupMeetings.Queries.Meetings
 {
     public class Meeting
     {

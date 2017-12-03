@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SetupMeetings.Commands.Users;
-using SetupMeetings.Queries;
+using SetupMeetings.Queries.Users;
 using SetupMeetings.WebApi.Models.Users;
 using SetupMeetings.WebApi.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -75,7 +75,7 @@ namespace SetupMeetings.WebApi.Controllers
 
             var command = mapper.Map<CreateUserCommand>(request);
             var result = await _service.Create(command).ConfigureAwait(false);
-            return CreatedAtAction(nameof(GetUser), new { userId = result.UserId }, null);
+            return CreatedAtAction(nameof(GetUser), new { userId = result.Id }, null);
         }
 
         [HttpPut("{userId}/emailaddress")]

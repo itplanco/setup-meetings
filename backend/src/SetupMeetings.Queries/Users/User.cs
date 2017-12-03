@@ -1,4 +1,6 @@
-﻿namespace SetupMeetings.Queries
+﻿using SetupMeetings.Queries.Common;
+
+namespace SetupMeetings.Queries.Users
 {
     public class User
     {

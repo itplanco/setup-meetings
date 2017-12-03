@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using SetupMeetings.Queries;
+using SetupMeetings.Queries.Meetings;
 
 namespace SetupMeetings.WebApi.Controllers
 {

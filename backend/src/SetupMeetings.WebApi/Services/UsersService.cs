@@ -1,6 +1,9 @@
 ﻿using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.Messaging;
 using SetupMeetings.Queries;
+using SetupMeetings.Queries.Common;
+using SetupMeetings.Queries.Users;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,15 +13,10 @@ namespace SetupMeetings.WebApi.Services
     {
         IEnumerable<User> GetUsers();
         User GetUserById(string userId);
-        Task<CreateUserCommandResult> Create(CreateUserCommand command);
+        Task<User> Create(CreateUserCommand command);
         Task Process(ChangeEmailAddressCommand command);
         Task Process(ChangeOrganizationCommand command);
         Task Process(DeleteUserCommand command);
-    }
-
-    public class CreateUserCommandResult
-    {
-        public string UserId { get; set; }
     }
 
     class UsersService : IUsersService
@@ -63,13 +61,10 @@ namespace SetupMeetings.WebApi.Services
             };
         }
 
-        public Task<CreateUserCommandResult> Create(CreateUserCommand command)
+        public Task<User> Create(CreateUserCommand command)
         {
             _bus.Send(Envelope.Create((ICommand)command));
-            return Task.FromResult(new CreateUserCommandResult()
-            {
-                UserId = "1"
-            });
+            return Task.FromResult(GetUserById(Guid.NewGuid().ToString()));
         }
 
         public Task Process(ChangeEmailAddressCommand command)
