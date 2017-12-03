@@ -33,6 +33,11 @@ namespace SetupMeetings.Infrastructure.EventSourcing
             get { return pendingEvents; }
         }
 
+        public void ClearPendingEvents()
+        {
+            pendingEvents.Clear();
+        }
+
         protected void Handles<TEvent>(Action<TEvent> handler)
             where TEvent : IEvent
         {

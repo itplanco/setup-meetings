@@ -8,5 +8,6 @@ namespace SetupMeetings.Infrastructure.EventSourcing
         Guid Id { get; }
         int Version { get; }
         IEnumerable<IVersionedEvent> Events { get; }
+        void ClearPendingEvents();
     }
 }

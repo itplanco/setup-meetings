@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -19,7 +18,6 @@ namespace SetupMeetings.WebApi.Infrastracture.EventSourcing
         private readonly IEventBus eventBus;
         private readonly Func<Guid, IEnumerable<IVersionedEvent>, T> entityFactory;
         private readonly Dictionary<Tuple<Type, Guid>, string> filenameByTypeAndId;
-        private readonly Dictionary<Guid, T> entityById;
         private JsonTextSerializer serializer = new JsonTextSerializer();
 
         public EventSourcedRepository(IEventBus eventBus)
@@ -33,31 +31,29 @@ namespace SetupMeetings.WebApi.Infrastracture.EventSourcing
             }
             entityFactory = (id, events) => (T)constructor.Invoke(new object[] { id, events });
 
-            entityById = new Dictionary<Guid, T>();
             filenameByTypeAndId = new Dictionary<Tuple<Type, Guid>, string>();
         }
 
         public T Find(Guid id)
         {
-            if (entityById.TryGetValue(id, out var value))
-            {
-                return value;
-            }
-
             var filename = CreateFilename(typeof(T), id);
             if (!File.Exists(filename))
             {
                 return null;
             }
 
+            return entityFactory.Invoke(id, LoadFromXml(filename).Select(ed => Deserialize(ed)));
+        }
+
+        private List<EventData> LoadFromXml(string filename)
+        {
             using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
             {
                 var doc = XDocument.Load(stream);
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<EventData>));
                 using (var reader = doc.CreateReader())
                 {
-                    var list = (List<EventData>)xmlSerializer.Deserialize(reader);
-                    return entityFactory.Invoke(id, list.Select(ed => Deserialize(ed)));
+                    return (List<EventData>)xmlSerializer.Deserialize(reader);
                 }
             }
         }
@@ -87,7 +83,22 @@ namespace SetupMeetings.WebApi.Infrastracture.EventSourcing
         public void Save(T eventSourced, Guid correlationId)
         {
             var events = eventSourced.Events.ToArray();
-            this.eventBus.Publish(events.Select(e => new Envelope<IEvent>(e) { CorrelationId = correlationId.ToString() }));
+            var eventData = events.Select(e => Serialize(e, correlationId.ToString())).ToList();
+
+            var doc = new XDocument();
+            var xmlSerializer = new XmlSerializer(typeof(List<EventData>));
+            using (var writer = doc.CreateWriter())
+            {
+                xmlSerializer.Serialize(writer, eventData);
+            }
+
+            var filename = CreateFilename(typeof(T), eventSourced.Id);
+            using (var stream = new FileStream(filename, FileMode.Create, FileAccess.Write))
+            {
+                doc.Save(stream);
+            }
+
+            eventBus.Publish(events.Select(e => new Envelope<IEvent>(e) { CorrelationId = correlationId.ToString() }));
         }
 
         private IVersionedEvent Deserialize(EventData ed)
