@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace SetupMeetings.Queries.Users
 {
     public interface IUsersRepository
     {
         IQueryable<User> Users { get; }
-        User FindById(string id);
+        User FindById(Guid id);
     }
 }

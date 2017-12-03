@@ -52,7 +52,12 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("getUsersById")]
         public IActionResult GetUser(string userId)
         {
-            var user = _service.GetUserById(userId);
+            if (!Guid.TryParse(userId, out var guidUserId))
+            {
+                return NotFound();
+            }
+
+            var user = _service.GetUserById(guidUserId);
             if (user == null)
             {
                 return NotFound();
@@ -74,8 +79,9 @@ namespace SetupMeetings.WebApi.Controllers
             }
 
             var command = mapper.Map<CreateUserCommand>(request);
+            command.Id = Guid.NewGuid();
             var result = await _service.Create(command).ConfigureAwait(false);
-            return CreatedAtAction(nameof(GetUser), new { userId = result.Id }, null);
+            return CreatedAtAction(nameof(GetUser), new { userId = result }, null);
         }
 
         [HttpPut("{userId}/emailaddress")]
@@ -84,13 +90,19 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("changeUserEmailAddress")]
         public async Task<IActionResult> ChangeEmailAddressAsync(string userId, [FromBody]ChangeEmailAddressRequest request)
         {
+            if (!Guid.TryParse(userId, out var guidUserId))
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var command = mapper.Map<ChangeEmailAddressCommand>(request);
-            await _service.Process(command).ConfigureAwait(false);
+            command.UserId = guidUserId;
+            await _service.ChangeEmailAddress(command).ConfigureAwait(false);
             return AcceptedAtAction(nameof(GetUser), new { userId }, null);
         }
 
@@ -100,13 +112,19 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("changeUserOrganization")]
         public async Task<IActionResult> ChangeOrganizationAsync(string userId, [FromBody]ChangeOrganizationRequest request)
         {
+            if (!Guid.TryParse(userId, out var guidUserId))
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var command = mapper.Map<ChangeOrganizationCommand>(request);
-            await _service.Process(command).ConfigureAwait(false);
+            command.UserId = guidUserId;
+            await _service.ChangeOrganization(command).ConfigureAwait(false);
             return AcceptedAtAction(nameof(GetUser), new { userId }, null);
         }
 
@@ -116,7 +134,12 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("deleteUser")]
         public async Task<IActionResult> DeleteUserAsync(string userId)
         {
-            await _service.Process(new DeleteUserCommand() { UserId = new Guid(userId) }).ConfigureAwait(false);
+            if (!Guid.TryParse(userId, out var guidUserId))
+            {
+                return NotFound();
+            }
+
+            await _service.Delete(new DeleteUserCommand() { UserId = guidUserId }).ConfigureAwait(false);
             return NoContent();
         }
     }

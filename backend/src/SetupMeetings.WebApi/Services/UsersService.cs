@@ -1,10 +1,9 @@
 ﻿using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.Messaging;
-using SetupMeetings.Queries;
-using SetupMeetings.Queries.Common;
 using SetupMeetings.Queries.Users;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SetupMeetings.WebApi.Services
@@ -12,73 +11,58 @@ namespace SetupMeetings.WebApi.Services
     public interface IUsersService
     {
         IEnumerable<User> GetUsers();
-        User GetUserById(string userId);
-        Task<User> Create(CreateUserCommand command);
-        Task Process(ChangeEmailAddressCommand command);
-        Task Process(ChangeOrganizationCommand command);
-        Task Process(DeleteUserCommand command);
+        User GetUserById(Guid userId);
+        Task<Guid> Create(CreateUserCommand command);
+        Task ChangeEmailAddress(ChangeEmailAddressCommand command);
+        Task ChangeOrganization(ChangeOrganizationCommand command);
+        Task Delete(DeleteUserCommand command);
     }
 
     class UsersService : IUsersService
     {
         private ICommandBus _bus;
+        private IEventAwaiter _eventAwaiter;
+        private IUsersRepository _repository;
 
-        public UsersService(ICommandBus bus)
+        public UsersService(ICommandBus bus, IEventAwaiter eventAwaiter, IUsersRepository repository)
         {
             _bus = bus;
+            _eventAwaiter = eventAwaiter;
+            _repository = repository;
         }
 
-        public User GetUserById(string userId)
+        public User GetUserById(Guid userId)
         {
-            return new User()
-            {
-                Id = "1",
-                Name = "誰それ何某",
-                EmailAddress = "test@example.com",
-                Organization = new Organization()
-                {
-                    Id = "1",
-                    Name = "株式会社 なんちゃら",
-                }
-            };
+            return _repository.FindById(userId);
         }
 
         public IEnumerable<User> GetUsers()
         {
-            return new[]
-            {
-                new User()
-                {
-                    Id = "1",
-                    Name = "誰それ何某",
-                    EmailAddress = "test@example.com",
-                    Organization = new Organization()
-                    {
-                        Id = "1",
-                        Name = "株式会社 なんちゃら",
-                    }
-                },
-            };
+            return _repository.Users.ToList();
         }
 
-        public Task<User> Create(CreateUserCommand command)
+        public async Task<Guid> Create(CreateUserCommand command)
         {
             _bus.Send(Envelope.Create((ICommand)command));
-            return Task.FromResult(GetUserById(Guid.NewGuid().ToString()));
+            var result = await _eventAwaiter.WaitForMessage<UserCreatedEvent>(command.Id, TimeSpan.FromSeconds(1));
+            return result.SourceId;
         }
 
-        public Task Process(ChangeEmailAddressCommand command)
+        public Task ChangeEmailAddress(ChangeEmailAddressCommand command)
         {
+            _bus.Send(Envelope.Create((ICommand)command));
             return Task.CompletedTask;
         }
 
-        public Task Process(ChangeOrganizationCommand command)
+        public Task ChangeOrganization(ChangeOrganizationCommand command)
         {
+            _bus.Send(Envelope.Create((ICommand)command));
             return Task.CompletedTask;
         }
 
-        public Task Process(DeleteUserCommand command)
+        public Task Delete(DeleteUserCommand command)
         {
+            _bus.Send(Envelope.Create((ICommand)command));
             return Task.CompletedTask;
         }
     }
