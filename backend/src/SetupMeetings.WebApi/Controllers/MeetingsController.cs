@@ -232,20 +232,20 @@ namespace SetupMeetings.WebApi.Controllers
             return CreatedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 }, null);
         }
 
-        [HttpPut("{meetingId}/attendees/{userId}/attend")]
+        [HttpPut("{meetingId}/attendees/{userId}/attendance")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [SwaggerOperation("attendeeAttend")]
-        public IActionResult AtteneeAttend(string meetingId, string userId)
+        [SwaggerOperation("updateAttendeeAttendance")]
+        public IActionResult UpdateAttendance(string meetingId, string userId, [FromBody] AttendanceRequest request)
         {
             return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 }, null);
         }
 
-        [HttpPut("{meetingId}/attendees/{userId}/paid")]
+        [HttpPut("{meetingId}/attendees/{userId}/payment")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [SwaggerOperation("attendeePaid")]
-        public IActionResult AtteneePaid(string meetingId, string userId)
+        [SwaggerOperation("updateAttendeePayment")]
+        public IActionResult UpdatePayment(string meetingId, string userId, [FromBody] PaymentRequest request)
         {
             return AcceptedAtAction(nameof(GetAttendee), new { meetingId, userId = 1 }, null);
         }
