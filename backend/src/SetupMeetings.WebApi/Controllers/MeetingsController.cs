@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using SetupMeetings.Queries.Meetings;
 using SetupMeetings.WebApi.Models.Meetings;
+using SetupMeetings.WebApi.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
@@ -11,50 +14,37 @@ namespace SetupMeetings.WebApi.Controllers
     [Route("api/meetings")]
     public class MeetingsController : ControllerBase
     {
+        private IMeetingsService _service;
+        private IMapper _mapper;
+
+        public MeetingsController(IMeetingsService service)
+        {
+            _service = service;
+            var mapperConfig = new MapperConfiguration(c =>
+            {
+                c.CreateMap<Meeting, MeetingResponse>();
+            });
+            _mapper = mapperConfig.CreateMapper();
+        }
+
         [HttpGet("{meetingId}")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(MeetingResponse))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [SwaggerOperation("getMeetingById")]
         public IActionResult GetMeeting(string meetingId)
         {
-            return Ok(new MeetingResponse()
+            if (!Guid.TryParse(meetingId, out var guidMeetingId))
             {
-                MeetingId = meetingId,
-                Name = "忘年会",
-                StartAt = new DateTime(2017, 12, 7, 10, 30, 0, DateTimeKind.Utc),
-                EndAt = new DateTime(2017, 12, 7, 12, 30, 0, DateTimeKind.Utc),
-                Organizers = new List<OrganizerResponse>() {
-                    new OrganizerResponse()
-                    {
-                        UserId = "1",
-                        UserName = "誰それ何某",
-                        OrganizationId = "1",
-                        OrganizationName = "株式会社 なんちゃら",
-                    },
-                },
-                Attendees = new List<AttendeeResponse>()
-                {
-                    new AttendeeResponse()
-                    {
-                        UserId = "1",
-                        UserName = "誰それ何某",
-                        OrganizationId = "1",
-                        OrganizationName = "株式会社 なんちゃら",
-                        Attend = false
-                    }
-                },
-                Invitees = new List<InviteeResponse>()
-                {
-                    new InviteeResponse()
-                    {
-                        UserId = "1",
-                        UserName = "誰それ何某",
-                        OrganizationId = "1",
-                        OrganizationName = "株式会社 なんちゃら",
-                        Rsvp = false
-                    }
-                },
-            });
+                return NotFound();
+            }
+
+            var meeting = _service.GetMeetingById(guidMeetingId);
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            var response = _mapper.Map<MeetingResponse>(meeting);
+            return Ok(response);
         }
 
         [HttpPost]

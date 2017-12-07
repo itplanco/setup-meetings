@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.EventSourcing;
 using SetupMeetings.Infrastructure.Messaging;
+using SetupMeetings.Queries.Meetings;
 using SetupMeetings.Queries.Users;
 using SetupMeetings.WebApi.Infrastracture.DataStore;
 using SetupMeetings.WebApi.Infrastracture.EventSourcing;
@@ -44,6 +45,8 @@ namespace SetupMeetings.WebApi
             services.AddTransient<IEventAwaiter, EventAwaiter>();
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IMeetingsRepository, MeetingsRepository>();
+            services.AddTransient<IMeetingsService, MeetingsService>();
 
             services.AddMvc();
 
