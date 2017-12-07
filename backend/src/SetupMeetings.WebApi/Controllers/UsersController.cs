@@ -129,7 +129,7 @@ namespace SetupMeetings.WebApi.Controllers
         }
 
         [HttpDelete("{userId}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [SwaggerOperation("deleteUser")]
         public async Task<IActionResult> DeleteUserAsync(string userId)
@@ -140,7 +140,7 @@ namespace SetupMeetings.WebApi.Controllers
             }
 
             await _service.Delete(new DeleteUserCommand() { UserId = guidUserId }).ConfigureAwait(false);
-            return NoContent();
+            return Accepted();
         }
     }
 }

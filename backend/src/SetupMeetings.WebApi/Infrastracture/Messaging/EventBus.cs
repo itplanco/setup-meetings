@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using SetupMeetings.Infrastructure.Messaging;
 using System.Linq;
+using SetupMeetings.WebApi.Infrastracture.Queries;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SetupMeetings.WebApi.Infrastracture.Messaging
 {

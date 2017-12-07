@@ -63,12 +63,12 @@ namespace SetupMeetings.FunctionalTests
 
         private void ユーザの所属を変更する()
         {
-            _client.Put($"/api/users/{userId}", new ChangeOrganizationRequest() { NewOrganizationId = "2" });
+            _client.Put($"/api/users/{userId}/organization", new ChangeOrganizationRequest() { NewOrganizationId = Guid.NewGuid().ToString() });
             _client.AssertStatusCode(HttpStatusCode.Accepted);
             _client.Get($"/api/users/{userId}");
             _client.AssertObjectWithStatus<UserResponse>(
                 HttpStatusCode.OK,
-                m => m.OrganizationName == "Organization Name 2");
+                m => m.OrganizationName != null);
         }
 
         private void ユーザを削除する()

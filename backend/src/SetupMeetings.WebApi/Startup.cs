@@ -7,6 +7,7 @@ using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.EventSourcing;
 using SetupMeetings.Infrastructure.Messaging;
 using SetupMeetings.Queries.Users;
+using SetupMeetings.WebApi.Infrastracture.DataStore;
 using SetupMeetings.WebApi.Infrastracture.EventSourcing;
 using SetupMeetings.WebApi.Infrastracture.Messaging;
 using SetupMeetings.WebApi.Infrastracture.Queries;
@@ -32,9 +33,13 @@ namespace SetupMeetings.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var context = new SetupMeetingsQueryContext();
+            var eventDispatcher = new EventDispatcher();
+            eventDispatcher.Register(new UserRepositoryUppdator(context));
             services.AddSingleton<IEventSourcedRepository<UserAggregate>, EventSourcedRepository<UserAggregate>>();
             services.AddSingleton<ICommandBus, CommandBus>();
-            services.AddSingleton<EventDispatcher>();
+            services.AddSingleton(context);
+            services.AddSingleton(eventDispatcher);
             services.AddSingleton<IEventBus, EventBus>();
             services.AddTransient<IEventAwaiter, EventAwaiter>();
             services.AddTransient<IUsersRepository, UsersRepository>();

@@ -1,7 +1,9 @@
 ﻿using SetupMeetings.Common.Events.Users;
 using SetupMeetings.Infrastructure.Messaging;
+using SetupMeetings.Queries.Common;
 using SetupMeetings.Queries.Users;
-using System.Collections.Generic;
+using System;
+using SetupMeetings.WebApi.Infrastracture.DataStore;
 
 namespace SetupMeetings.WebApi.Infrastracture.Queries
 {
@@ -11,31 +13,66 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
         IEventHandler<UserOrganizationChangedEvent>,
         IEventHandler<UserDeletedEvent>
     {
-        private List<User> _dataStore;
+        private SetupMeetingsQueryContext _context;
 
-        public UserRepositoryUppdator(List<User> dataStore)
+        public UserRepositoryUppdator(SetupMeetingsQueryContext context)
         {
-
+            this._context = context;
         }
 
         public void Handle(UserCreatedEvent @event)
         {
-            throw new System.NotImplementedException();
+            var user  = _context.Users.FindById(@event.SourceId);
+            if (user != null)
+            {
+                // error ?
+            }
+
+            user = new User()
+            {
+                Id = @event.SourceId,
+                Name = @event.Name,
+                EmailAddress = @event.EmailAddress,
+                Organization = Organization.FindById(@event.OrganizationId)
+            };
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
 
         public void Handle(UserEmailAddressChangedEvent @event)
         {
-            throw new System.NotImplementedException();
+            var user = _context.Users.FindById(@event.SourceId);
+            if (user == null)
+            {
+                throw new ArgumentException("user does not exists in data store.", nameof(@event));
+            }
+
+            user.EmailAddress = @event.NewEmailAddress;
+            _context.SaveChanges();
         }
 
         public void Handle(UserOrganizationChangedEvent @event)
         {
-            throw new System.NotImplementedException();
+            var user = _context.Users.FindById(@event.SourceId);
+            if (user == null)
+            {
+                throw new ArgumentException("user does not exists in data store.", nameof(@event));
+            }
+
+            user.Organization = Organization.FindById(@event.NewOrganizationId);
+            _context.SaveChanges();
         }
 
         public void Handle(UserDeletedEvent @event)
         {
-            throw new System.NotImplementedException();
+            var user = _context.Users.FindById(@event.SourceId);
+            if (user == null)
+            {
+                throw new ArgumentException("user does not exists in data store.", nameof(@event));
+            }
+
+            _context.Users.Remove(user);
+            _context.SaveChanges();
         }
     }
 }
