@@ -8,20 +8,7 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
 {
     public class UsersRepository : IUsersRepository
     {
-        private List<User> _userList = new List<User>()
-        {
-            new User()
-            {
-                Id = Guid.NewGuid(),
-                Name = "誰それ何某",
-                EmailAddress = "test@example.com",
-                Organization = new Organization()
-                {
-                    Id = "1",
-                    Name = "株式会社 なんちゃら",
-                }
-            },
-        };
+        private List<User> _userList = new List<User>();
 
         public IQueryable<User> Users => new EnumerableQuery<User>(_userList);
 

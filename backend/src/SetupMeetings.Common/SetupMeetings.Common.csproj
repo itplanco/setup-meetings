@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SetupMeetings.Common\SetupMeetings.Common.csproj" />
     <ProjectReference Include="..\SetupMeetings.Infrastructure\SetupMeetings.Infrastructure.csproj" />
   </ItemGroup>
 

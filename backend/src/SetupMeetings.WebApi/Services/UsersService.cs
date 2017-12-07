@@ -1,4 +1,5 @@
 ﻿using SetupMeetings.Commands.Users;
+using SetupMeetings.Common.Events.Users;
 using SetupMeetings.Infrastructure.Messaging;
 using SetupMeetings.Queries.Users;
 using System;

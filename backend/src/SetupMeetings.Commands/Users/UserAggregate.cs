@@ -1,4 +1,5 @@
-﻿using SetupMeetings.Infrastructure.EventSourcing;
+﻿using SetupMeetings.Common.Events.Users;
+using SetupMeetings.Infrastructure.EventSourcing;
 using System;
 using System.Collections.Generic;
 

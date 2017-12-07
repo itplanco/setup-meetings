@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SetupMeetings.Commands.Users;
+using SetupMeetings.Common.Events.Users;
 using SetupMeetings.Infrastructure.Messaging;
 using System;
 using System.Threading.Tasks;

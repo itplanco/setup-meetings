@@ -1,7 +1,6 @@
 ﻿using SetupMeetings.Infrastructure.EventSourcing;
-using System;
 
-namespace SetupMeetings.Commands.Users
+namespace SetupMeetings.Common.Events.Users
 {
     public class UserEmailAddressChangedEvent : VersionedEvent
     {
