@@ -22,13 +22,11 @@ namespace SetupMeetings.WebApi.Services
     class UsersService : IUsersService
     {
         private ICommandBus _bus;
-        private IEventAwaiter _eventAwaiter;
         private IUsersRepository _repository;
 
-        public UsersService(ICommandBus bus, IEventAwaiter eventAwaiter, IUsersRepository repository)
+        public UsersService(ICommandBus bus, IUsersRepository repository)
         {
             _bus = bus;
-            _eventAwaiter = eventAwaiter;
             _repository = repository;
         }
 
@@ -42,12 +40,10 @@ namespace SetupMeetings.WebApi.Services
             return _repository.Users.ToList();
         }
 
-        public async Task<Guid> Create(CreateUserCommand command)
+        public Task<Guid> Create(CreateUserCommand command)
         {
-            var awaiter = _eventAwaiter.WaitForMessage<UserCreatedEvent>(command.Id, TimeSpan.FromSeconds(1));
             _bus.Send(Envelope.Create((ICommand)command));
-            var result = await awaiter;
-            return result.SourceId;
+            return Task.FromResult(command.UserId);
         }
 
         public Task ChangeEmailAddress(ChangeEmailAddressCommand command)

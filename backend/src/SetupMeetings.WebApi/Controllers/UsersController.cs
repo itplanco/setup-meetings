@@ -80,8 +80,8 @@ namespace SetupMeetings.WebApi.Controllers
 
             var command = mapper.Map<CreateUserCommand>(request);
             command.Id = Guid.NewGuid();
-            var result = await _service.Create(command).ConfigureAwait(false);
-            return CreatedAtAction(nameof(GetUser), new { userId = result }, null);
+            var userId = await _service.Create(command).ConfigureAwait(false);
+            return CreatedAtAction(nameof(GetUser), new { userId }, null);
         }
 
         [HttpPut("{userId}/emailaddress")]

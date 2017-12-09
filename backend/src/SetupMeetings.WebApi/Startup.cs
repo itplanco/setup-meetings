@@ -42,7 +42,6 @@ namespace SetupMeetings.WebApi
             services.AddSingleton(context);
             services.AddSingleton(eventDispatcher);
             services.AddSingleton<IEventBus, EventBus>();
-            services.AddTransient<IEventAwaiter, EventAwaiter>();
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IMeetingsRepository, MeetingsRepository>();

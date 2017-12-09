@@ -18,7 +18,7 @@ namespace SetupMeetings.Commands.Users
 
         public void Handle(CreateUserCommand command)
         {
-            var user = UserAggregate.CreateUser(command.Name, command.EmailAddress, command.OrganizationId);
+            var user = UserAggregate.CreateUser(command.UserId, command.Name, command.EmailAddress, command.OrganizationId);
             _repository.Save(user, command.Id);
         }
 

@@ -30,9 +30,9 @@ namespace SetupMeetings.Commands.Users
             LoadFrom(history);
         }
 
-        public static UserAggregate CreateUser(string name, string emailAddress, Guid organizationId)
+        public static UserAggregate CreateUser(Guid userId, string name, string emailAddress, Guid organizationId)
         {
-            var user = new UserAggregate(Guid.NewGuid());
+            var user = new UserAggregate(userId);
             user.Update(new UserCreatedEvent()
             {
                 Name = name,
