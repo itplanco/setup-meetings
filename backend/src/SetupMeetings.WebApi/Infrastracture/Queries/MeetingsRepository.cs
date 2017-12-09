@@ -24,6 +24,15 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
                         Organization = Organization.FindById(Guid.NewGuid()),
                     }
                 },
+                Sponsors = new List<Sponsor>()
+                {
+                    new Sponsor()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "誰それ何某",
+                        Organization = Organization.FindById(Guid.NewGuid()),
+                    },
+                },
                 Attendees = new List<Attendee>()
                 {
                     new Attendee()

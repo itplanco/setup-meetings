@@ -12,5 +12,6 @@ namespace SetupMeetings.Queries.Meetings
         public List<Organizer> Organizers { get; set; }
         public List<Attendee> Attendees { get; set; }
         public List<Invitee> Invitees { get; set; }
+        public List<Sponsor> Sponsors { get; set; }
     }
 }

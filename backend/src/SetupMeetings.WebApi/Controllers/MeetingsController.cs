@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using SetupMeetings.Commands.Meetings;
 using SetupMeetings.Queries.Meetings;
 using SetupMeetings.WebApi.Models.Meetings;
 using SetupMeetings.WebApi.Services;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace SetupMeetings.WebApi.Controllers
 {
@@ -23,6 +26,7 @@ namespace SetupMeetings.WebApi.Controllers
             var mapperConfig = new MapperConfiguration(c =>
             {
                 c.CreateMap<Meeting, MeetingResponse>();
+                c.CreateMap<CreateNewMeetingRequest, CreateMeetingCommand>();
             });
             _mapper = mapperConfig.CreateMapper();
         }
@@ -51,9 +55,16 @@ namespace SetupMeetings.WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [SwaggerOperation("createNewMeeting")]
-        public IActionResult CreateNewMeeting([FromBody] CreateNewMeetingRequest newMeeting)
+        public async Task<IActionResult> CreateNewMeetingAsync([FromBody] CreateNewMeetingRequest request)
         {
-            return CreatedAtAction(nameof(GetMeeting), new { meetingId = "1" }, null);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var command = _mapper.Map<CreateMeetingCommand>(request);
+            var meetingId = await _service.CreateNewMeeting(command);
+            return CreatedAtAction(nameof(GetMeeting), new { meetingId }, null);
         }
 
         [HttpGet("{meetingId}/sponsors")]
@@ -62,19 +73,21 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("getSponsors")]
         public IActionResult GetSponsors(string meetingId)
         {
-            return Ok(new SponsorsResponse()
+            if (!Guid.TryParse(meetingId, out var guidMeetingId))
             {
-                Sponsors = new List<SponsorResponse>()
-                {
-                    new SponsorResponse()
-                    {
-                        UserId = "1",
-                        UserName = "誰それ何某",
-                        OrganizationId = "1",
-                        OrganizationName = "株式会社 なんちゃら",
-                    },
-                }
-            });
+                return NotFound();
+            }
+
+            var meeting = _service.GetMeetingById(guidMeetingId);
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            var response = new SponsorsResponse()
+            {
+                Sponsors = meeting.Sponsors.Select(s => _mapper.Map<SponsorResponse>(s)).ToList()
+            };
+            return Ok(response);
         }
 
         [HttpGet("{meetingId}/sponsors/{userId}")]
