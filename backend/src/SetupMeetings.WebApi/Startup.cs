@@ -36,7 +36,7 @@ namespace SetupMeetings.WebApi
         {
             var context = new SetupMeetingsQueryContext();
             var eventDispatcher = new EventDispatcher();
-            eventDispatcher.Register(new UserRepositoryUppdator(context));
+            eventDispatcher.Register(new UsersRepositoryUpdator(context));
             services.AddSingleton<IEventSourcedRepository<UserAggregate>, EventSourcedRepository<UserAggregate>>();
             services.AddSingleton<ICommandBus, CommandBus>();
             services.AddSingleton(context);

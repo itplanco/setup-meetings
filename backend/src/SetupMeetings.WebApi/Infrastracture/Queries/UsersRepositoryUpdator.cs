@@ -7,7 +7,7 @@ using SetupMeetings.WebApi.Infrastracture.DataStore;
 
 namespace SetupMeetings.WebApi.Infrastracture.Queries
 {
-    public class UserRepositoryUppdator : 
+    public class UsersRepositoryUpdator : 
         IEventHandler<UserCreatedEvent>,
         IEventHandler<UserEmailAddressChangedEvent>,
         IEventHandler<UserOrganizationChangedEvent>,
@@ -15,7 +15,7 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
     {
         private SetupMeetingsQueryContext _context;
 
-        public UserRepositoryUppdator(SetupMeetingsQueryContext context)
+        public UsersRepositoryUpdator(SetupMeetingsQueryContext context)
         {
             this._context = context;
         }
