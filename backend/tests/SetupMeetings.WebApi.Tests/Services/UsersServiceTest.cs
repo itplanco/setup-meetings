@@ -1,10 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SetupMeetings.Commands.Users;
-using SetupMeetings.Common.Events.Users;
 using SetupMeetings.Infrastructure.Messaging;
 using System;
-using System.Threading.Tasks;
 
 namespace SetupMeetings.WebApi.Services
 {
@@ -17,7 +15,7 @@ namespace SetupMeetings.WebApi.Services
             var mockEventBus = new Mock<ICommandBus>();
             mockEventBus.Setup(moq => moq.Send(It.IsAny<Envelope<ICommand>>()));
             var sut = new UsersService(mockEventBus.Object, null);
-            var task = sut.Create(new CreateUserCommand());
+            var task = sut.CreateUser(new CreateUserCommand());
             task.Wait(TimeSpan.FromMilliseconds(500));
             mockEventBus.VerifyAll();
         }

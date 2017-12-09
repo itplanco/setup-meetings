@@ -13,7 +13,7 @@ namespace SetupMeetings.WebApi.Services
     {
         IEnumerable<User> GetUsers();
         User GetUserById(Guid userId);
-        Task<Guid> Create(CreateUserCommand command);
+        Task<Guid> CreateUser(CreateUserCommand command);
         Task ChangeEmailAddress(ChangeEmailAddressCommand command);
         Task ChangeOrganization(ChangeOrganizationCommand command);
         Task Delete(DeleteUserCommand command);
@@ -40,7 +40,7 @@ namespace SetupMeetings.WebApi.Services
             return _repository.Users.ToList();
         }
 
-        public Task<Guid> Create(CreateUserCommand command)
+        public Task<Guid> CreateUser(CreateUserCommand command)
         {
             _bus.Send(Envelope.Create((ICommand)command));
             return Task.FromResult(command.UserId);

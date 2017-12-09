@@ -70,8 +70,8 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [SwaggerOperation("createNewUser")]
-        public async Task<IActionResult> CreateNewUser([FromBody]CreateNewUserRequest request)
+        [SwaggerOperation("createUser")]
+        public async Task<IActionResult> CreateUser([FromBody]CreateNewUserRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace SetupMeetings.WebApi.Controllers
 
             var command = mapper.Map<CreateUserCommand>(request);
             command.Id = Guid.NewGuid();
-            var userId = await _service.Create(command).ConfigureAwait(false);
+            var userId = await _service.CreateUser(command).ConfigureAwait(false);
             return CreatedAtAction(nameof(GetUser), new { userId }, null);
         }
 
