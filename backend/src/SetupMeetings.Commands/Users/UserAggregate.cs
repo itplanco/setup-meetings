@@ -20,15 +20,15 @@ namespace SetupMeetings.Commands.Users
             Handles<UserDeletedEvent>(OnDeleted);
         }
 
-        public string Name { get { return _name; } }
-        public string EmailAddress { get { return _emailAddress; } }
-        public Guid OrganizationId { get { return _organizationId; } }
-        public bool IsDeleted { get { return _isDeleted; } }
-
         public UserAggregate(Guid id, IEnumerable<IVersionedEvent> history) : this(id)
         {
             LoadFrom(history);
         }
+
+        public string Name { get { return _name; } }
+        public string EmailAddress { get { return _emailAddress; } }
+        public Guid OrganizationId { get { return _organizationId; } }
+        public bool IsDeleted { get { return _isDeleted; } }
 
         public static UserAggregate CreateUser(Guid userId, string name, string emailAddress, Guid organizationId)
         {

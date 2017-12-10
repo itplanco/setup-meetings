@@ -17,7 +17,7 @@ namespace SetupMeetings.WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private IUsersService _service;
-        private IMapper mapper;
+        private IMapper _mapper;
 
         public UsersController(IUsersService service)
         {
@@ -29,7 +29,7 @@ namespace SetupMeetings.WebApi.Controllers
                 c.CreateMap<ChangeEmailAddressRequest, ChangeEmailAddressCommand>();
                 c.CreateMap<ChangeOrganizationRequest, ChangeOrganizationCommand>();
             });
-            mapper = mapperConfig.CreateMapper();
+            _mapper = mapperConfig.CreateMapper();
         }
 
         [HttpGet]
@@ -41,7 +41,7 @@ namespace SetupMeetings.WebApi.Controllers
             var users = _service.GetUsers();
             var response = new UsersResponse()
             {
-                Users = mapper.Map<List<UserResponse>>(users),
+                Users = _mapper.Map<List<UserResponse>>(users),
             };
             return Ok(response);
         }
@@ -63,7 +63,7 @@ namespace SetupMeetings.WebApi.Controllers
                 return NotFound();
             }
 
-            var response = mapper.Map<UserResponse>(user);
+            var response = _mapper.Map<UserResponse>(user);
             return Ok(response);
         }
 
@@ -78,7 +78,7 @@ namespace SetupMeetings.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var command = mapper.Map<CreateUserCommand>(request);
+            var command = _mapper.Map<CreateUserCommand>(request);
             command.Id = Guid.NewGuid();
             var userId = await _service.CreateUser(command).ConfigureAwait(false);
             return CreatedAtAction(nameof(GetUser), new { userId }, null);
@@ -100,7 +100,7 @@ namespace SetupMeetings.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var command = mapper.Map<ChangeEmailAddressCommand>(request);
+            var command = _mapper.Map<ChangeEmailAddressCommand>(request);
             command.UserId = guidUserId;
             await _service.ChangeEmailAddress(command).ConfigureAwait(false);
             return AcceptedAtAction(nameof(GetUser), new { userId }, null);
@@ -122,7 +122,7 @@ namespace SetupMeetings.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var command = mapper.Map<ChangeOrganizationCommand>(request);
+            var command = _mapper.Map<ChangeOrganizationCommand>(request);
             command.UserId = guidUserId;
             await _service.ChangeOrganization(command).ConfigureAwait(false);
             return AcceptedAtAction(nameof(GetUser), new { userId }, null);

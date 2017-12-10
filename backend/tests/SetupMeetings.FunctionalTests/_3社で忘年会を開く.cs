@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SetupMeetings.FunctionalTests.Drivers;
 using SetupMeetings.WebApi;
 using SetupMeetings.WebApi.Models.Meetings;
+using SetupMeetings.WebApi.Models.Users;
 using System;
 using System.Linq;
 using System.Net;
@@ -13,7 +14,8 @@ namespace SetupMeetings.FunctionalTests
     [TestClass]
     public class _3社で忘年会を開く
     {
-        private string MeetingId = null;
+        private string MeetingId;
+        private string OrganizationId1;
 
         private TestServer _server;
         private HttpClientWrapper _client;
@@ -34,6 +36,7 @@ namespace SetupMeetings.FunctionalTests
         [TestMethod]
         public void 忘年会を作成して実施する()
         {
+            必要なユーザを作成する();
             忘年会を作成する();
             忘年会が作成されたことを確認する();
             忘年会にスポンサーを追加する();
@@ -60,11 +63,19 @@ namespace SetupMeetings.FunctionalTests
             参加者全員分忘年会の費用が計算されていることを確認する();
         }
 
+        private void 必要なユーザを作成する()
+        {
+            _client.Post("/api/users/", new CreateNewUserRequest() { Name = "Organizer1", EmailAddress = "organizer1@test.com", OrganizationId = Guid.NewGuid().ToString() });
+            _client.AssertCreatedStatusCode(out var location);
+            var split = location.AbsolutePath.Split('/');
+            OrganizationId1 = split[split.Length - 1];
+        }
+
         private void 忘年会を作成する()
         {
             var newMeeting = new CreateNewMeetingRequest();
             newMeeting.Name = "忘年会";
-            newMeeting.OrganizerUserId = "organizer1";
+            newMeeting.OrganizerId = OrganizationId1;
             _client.Post("/api/meetings", newMeeting);
             _client.AssertCreatedStatusCode(out var location);
             var split = location.AbsolutePath.Split('/');
@@ -79,15 +90,15 @@ namespace SetupMeetings.FunctionalTests
                 m =>
                     m.MeetingId == MeetingId &&
                     m.Name == "忘年会" &&
-                    m.Organizers[0].UserId == "organizer1");
+                    m.Organizers[0].UserId == OrganizationId1);
         }
 
         private void 忘年会にスポンサーを追加する()
         {
             _client.Post($"/api/meetings/{MeetingId}/sponsors/", new CreateNewSponsorRequest() { UserId = "sponsor1" });
-            _client.AssertStatusCode(HttpStatusCode.NoContent);
+            _client.AssertStatusCode(HttpStatusCode.Created);
             _client.Post($"/api/meetings/{MeetingId}/sponsors/", new CreateNewSponsorRequest() { UserId = "sponsor2" });
-            _client.AssertStatusCode(HttpStatusCode.NoContent);
+            _client.AssertStatusCode(HttpStatusCode.Created);
         }
 
         private void 忘年会にスポンサーが追加される()

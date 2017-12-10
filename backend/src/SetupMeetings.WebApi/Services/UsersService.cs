@@ -42,6 +42,7 @@ namespace SetupMeetings.WebApi.Services
 
         public Task<Guid> CreateUser(CreateUserCommand command)
         {
+            command.UserId = Guid.NewGuid();
             _bus.Send(Envelope.Create((ICommand)command));
             return Task.FromResult(command.UserId);
         }

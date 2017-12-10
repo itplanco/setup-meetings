@@ -1,4 +1,5 @@
-﻿using SetupMeetings.Commands.Users;
+﻿using SetupMeetings.Commands.Meetings;
+using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.EventSourcing;
 using SetupMeetings.Infrastructure.Messaging;
 using SetupMeetings.WebApi.Infrastracture.EventSourcing;
@@ -11,10 +12,11 @@ namespace SetupMeetings.WebApi.Infrastracture.Messaging
     {
         private CommandDispatcher _commandDispatcher;
 
-        public CommandBus(IEventSourcedRepository<UserAggregate> userRepository)
+        public CommandBus(IEventSourcedRepository<UserAggregate> usersRepository, IEventSourcedRepository<MeetingAggregate> meetingsRepository)
         {
             _commandDispatcher = new CommandDispatcher();
-            _commandDispatcher.Register(new UserCommandHandler(userRepository));
+            _commandDispatcher.Register(new UserCommandHandler(usersRepository));
+            _commandDispatcher.Register(new MeetingCommandHandler(meetingsRepository));
         }
 
         public void Send(Envelope<ICommand> command)

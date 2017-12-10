@@ -1,4 +1,5 @@
-﻿using SetupMeetings.Queries.Users;
+﻿using SetupMeetings.Queries.Meetings;
+using SetupMeetings.Queries.Users;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,7 @@ namespace SetupMeetings.WebApi.Infrastracture.DataStore
     public class SetupMeetingsQueryContext
     {
         public readonly Dictionary<Guid, User> Users = new Dictionary<Guid, User>();
+        public readonly Dictionary<Guid, Meeting> Meetings = new Dictionary<Guid, Meeting>();
 
         internal void SaveChanges()
         {
@@ -16,23 +18,25 @@ namespace SetupMeetings.WebApi.Infrastracture.DataStore
 
     public static class SetupMeetingQueryContextExtension
     {
-        public static User FindById(this Dictionary<Guid, User> users, Guid id)
+        public static T FindById<T>(this Dictionary<Guid, T> dictionary, Guid id)
         {
-            if (users.TryGetValue(id, out var user))
+            if (dictionary.TryGetValue(id, out var value))
             {
-                return user;
+                return value;
             }
-            return null;
+            return default(T);
         }
 
-        public static void Add(this Dictionary<Guid, User> users, User user)
+        public static void Add<T>(this Dictionary<Guid, T> dictionary, T value)
         {
-            users.Add(user.Id, user);
+            var id = (Guid)typeof(T).GetProperty("Id").GetValue(value);
+            dictionary.Add(id, value);
         }
 
-        public static void Remove(this Dictionary<Guid, User> users, User user)
+        public static void Remove<T>(this Dictionary<Guid, T> dictionary, T value)
         {
-            users.Remove(user.Id);
+            var id = (Guid)typeof(T).GetProperty("Id").GetValue(value);
+            dictionary.Remove(id);
         }
     }
 }

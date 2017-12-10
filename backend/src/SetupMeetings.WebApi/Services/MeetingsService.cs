@@ -9,7 +9,7 @@ namespace SetupMeetings.WebApi.Services
     public interface IMeetingsService
     {
         Meeting GetMeetingById(Guid meetingId);
-        Task<Guid> CreateNewMeeting(CreateMeetingCommand command);
+        Task<Guid> CreateMeeting(CreateMeetingCommand command);
     }
 
     public class MeetingsService : IMeetingsService
@@ -28,7 +28,7 @@ namespace SetupMeetings.WebApi.Services
             return _repository.FindById(meetingId);
         }
 
-        public Task<Guid> CreateNewMeeting(CreateMeetingCommand command)
+        public Task<Guid> CreateMeeting(CreateMeetingCommand command)
         {
             command.MeetingId = Guid.NewGuid();
             _bus.Send(Envelope.Create((ICommand)command));

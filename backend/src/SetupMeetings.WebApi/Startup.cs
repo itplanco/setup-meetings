@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SetupMeetings.Commands.Meetings;
 using SetupMeetings.Commands.Users;
 using SetupMeetings.Infrastructure.EventSourcing;
 using SetupMeetings.Infrastructure.Messaging;
@@ -37,7 +38,9 @@ namespace SetupMeetings.WebApi
             var context = new SetupMeetingsQueryContext();
             var eventDispatcher = new EventDispatcher();
             eventDispatcher.Register(new UsersRepositoryUpdator(context));
+            eventDispatcher.Register(new MeetingsRepositoryUpdator(context));
             services.AddSingleton<IEventSourcedRepository<UserAggregate>, EventSourcedRepository<UserAggregate>>();
+            services.AddSingleton<IEventSourcedRepository<MeetingAggregate>, EventSourcedRepository<MeetingAggregate>>();
             services.AddSingleton<ICommandBus, CommandBus>();
             services.AddSingleton(context);
             services.AddSingleton(eventDispatcher);

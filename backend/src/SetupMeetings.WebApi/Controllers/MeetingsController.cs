@@ -25,7 +25,20 @@ namespace SetupMeetings.WebApi.Controllers
             _service = service;
             var mapperConfig = new MapperConfiguration(c =>
             {
-                c.CreateMap<Meeting, MeetingResponse>();
+                c.CreateMap<Meeting, MeetingResponse>()
+                    .ForMember(d => d.MeetingId, opt => opt.MapFrom(s => s.Id));
+                c.CreateMap<Organizer, OrganizerResponse>()
+                    .ForMember(d => d.UserId, opt => opt.MapFrom(s => s.Id))
+                    .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.Name));
+                c.CreateMap<Invitee, InviteeResponse>()
+                    .ForMember(d => d.UserId, opt => opt.MapFrom(s => s.Id))
+                    .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.Name));
+                c.CreateMap<Attendee, AttendeeResponse>()
+                    .ForMember(d => d.UserId, opt => opt.MapFrom(s => s.Id))
+                    .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.Name));
+                c.CreateMap<Sponsor, SponsorResponse>()
+                    .ForMember(d => d.UserId, opt => opt.MapFrom(s => s.Id))
+                    .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.Name));
                 c.CreateMap<CreateNewMeetingRequest, CreateMeetingCommand>();
             });
             _mapper = mapperConfig.CreateMapper();
@@ -54,8 +67,8 @@ namespace SetupMeetings.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [SwaggerOperation("createNewMeeting")]
-        public async Task<IActionResult> CreateNewMeetingAsync([FromBody] CreateNewMeetingRequest request)
+        [SwaggerOperation("createMeeting")]
+        public async Task<IActionResult> CreateMeeting([FromBody] CreateNewMeetingRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -63,7 +76,7 @@ namespace SetupMeetings.WebApi.Controllers
             }
 
             var command = _mapper.Map<CreateMeetingCommand>(request);
-            var meetingId = await _service.CreateNewMeeting(command);
+            var meetingId = await _service.CreateMeeting(command);
             return CreatedAtAction(nameof(GetMeeting), new { meetingId }, null);
         }
 
