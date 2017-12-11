@@ -12,6 +12,6 @@ namespace SetupMeetings.WebApi.Models.Meetings
         public List<OrganizerResponse> Organizers { get; set; }
         public List<InviteeResponse> Invitees { get; set; }
         public List<AttendeeResponse> Attendees { get; set; }
-        public List<SponsorResponse> Sponsers { get; set; }
+        public List<SponsorResponse> Sponsors { get; set; }
     }
 }

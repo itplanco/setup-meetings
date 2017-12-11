@@ -10,6 +10,7 @@ namespace SetupMeetings.Commands.Meetings
         public MeetingAggregate(Guid id) : base(id)
         {
             Handles<MeetingCreatedEvent>(OnCreated);
+            Handles<SponsorAddedToMeetingEvent>(OnSponsorAdded);
         }
 
         public MeetingAggregate(Guid id, IEnumerable<IVersionedEvent> history) : this(id)
@@ -19,6 +20,7 @@ namespace SetupMeetings.Commands.Meetings
 
         private string _name = null;
         private List<Guid> _organizers = new List<Guid>();
+        private List<Guid> _sponsors = new List<Guid>();
 
         public static MeetingAggregate Create(Guid meetingId, string name, Guid organizerId)
         {
@@ -32,10 +34,20 @@ namespace SetupMeetings.Commands.Meetings
             return meeting;
         }
 
+        public void AddSponsor(Guid sponsorId)
+        {
+            Update(new SponsorAddedToMeetingEvent() { SponsorId = sponsorId });
+        }
+
         private void OnCreated(MeetingCreatedEvent obj)
         {
             _name = obj.Name;
             _organizers.Add(obj.OrganizerId);
+        }
+
+        private void OnSponsorAdded(SponsorAddedToMeetingEvent obj)
+        {
+            _sponsors.Add(obj.SponsorId);
         }
     }
 }

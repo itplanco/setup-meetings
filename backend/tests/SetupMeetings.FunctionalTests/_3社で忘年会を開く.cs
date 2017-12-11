@@ -15,7 +15,9 @@ namespace SetupMeetings.FunctionalTests
     public class _3社で忘年会を開く
     {
         private string MeetingId;
-        private string OrganizationId1;
+        private string OrganizerId1;
+        private string SponsorId1;
+        private string SponsorId2;
 
         private TestServer _server;
         private HttpClientWrapper _client;
@@ -65,17 +67,28 @@ namespace SetupMeetings.FunctionalTests
 
         private void 必要なユーザを作成する()
         {
+            Func<Uri, string> id = uri =>
+            {
+                var split = uri.AbsolutePath.Split('/');
+                return split[split.Length - 1];
+            };
             _client.Post("/api/users/", new CreateNewUserRequest() { Name = "Organizer1", EmailAddress = "organizer1@test.com", OrganizationId = Guid.NewGuid().ToString() });
-            _client.AssertCreatedStatusCode(out var location);
-            var split = location.AbsolutePath.Split('/');
-            OrganizationId1 = split[split.Length - 1];
+            _client.AssertCreatedStatusCode(out var l1);
+            OrganizerId1 = id(l1);
+            _client.Post("/api/users/", new CreateNewUserRequest() { Name = "Sponsor1", EmailAddress = "sponsor1@test.com", OrganizationId = Guid.NewGuid().ToString() });
+            _client.AssertCreatedStatusCode(out var l2);
+            SponsorId1 = id(l2);
+            _client.Post("/api/users/", new CreateNewUserRequest() { Name = "Sponsor2", EmailAddress = "sponsor2@test.com", OrganizationId = Guid.NewGuid().ToString() });
+            _client.AssertCreatedStatusCode(out var l3);
+            SponsorId2 = id(l3);
+
         }
 
         private void 忘年会を作成する()
         {
             var newMeeting = new CreateNewMeetingRequest();
             newMeeting.Name = "忘年会";
-            newMeeting.OrganizerId = OrganizationId1;
+            newMeeting.OrganizerId = OrganizerId1;
             _client.Post("/api/meetings", newMeeting);
             _client.AssertCreatedStatusCode(out var location);
             var split = location.AbsolutePath.Split('/');
@@ -90,14 +103,14 @@ namespace SetupMeetings.FunctionalTests
                 m =>
                     m.MeetingId == MeetingId &&
                     m.Name == "忘年会" &&
-                    m.Organizers[0].UserId == OrganizationId1);
+                    m.Organizers[0].UserId == OrganizerId1);
         }
 
         private void 忘年会にスポンサーを追加する()
         {
-            _client.Post($"/api/meetings/{MeetingId}/sponsors/", new CreateNewSponsorRequest() { UserId = "sponsor1" });
+            _client.Post($"/api/meetings/{MeetingId}/sponsors/", new CreateNewSponsorRequest() { UserId = SponsorId1 });
             _client.AssertStatusCode(HttpStatusCode.Created);
-            _client.Post($"/api/meetings/{MeetingId}/sponsors/", new CreateNewSponsorRequest() { UserId = "sponsor2" });
+            _client.Post($"/api/meetings/{MeetingId}/sponsors/", new CreateNewSponsorRequest() { UserId = SponsorId2 });
             _client.AssertStatusCode(HttpStatusCode.Created);
         }
 
@@ -108,8 +121,8 @@ namespace SetupMeetings.FunctionalTests
                 HttpStatusCode.OK,
                 m =>
                     m.MeetingId == MeetingId &&
-                    m.Organizers.Count == 2 &&
-                    m.Organizers[0].UserName == "スポンサー1");
+                    m.Sponsors.Count == 2 &&
+                    m.Sponsors[0].UserName == "Sponsor1");
         }
 
         private void 招待者を6人追加する()

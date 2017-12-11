@@ -9,9 +9,9 @@ namespace SetupMeetings.Queries.Meetings
         public string Name { get; set; }
         public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
-        public List<Organizer> Organizers { get; set; }
-        public List<Attendee> Attendees { get; set; }
-        public List<Invitee> Invitees { get; set; }
-        public List<Sponsor> Sponsors { get; set; }
+        public List<Organizer> Organizers { get; set; } = new List<Organizer>();
+        public List<Attendee> Attendees { get; set; } = new List<Attendee>();
+        public List<Invitee> Invitees { get; set; } = new List<Invitee>();
+        public List<Sponsor> Sponsors { get; set; } = new List<Sponsor>();
     }
 }

@@ -40,6 +40,8 @@ namespace SetupMeetings.WebApi.Controllers
                     .ForMember(d => d.UserId, opt => opt.MapFrom(s => s.Id))
                     .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.Name));
                 c.CreateMap<CreateNewMeetingRequest, CreateMeetingCommand>();
+                c.CreateMap<CreateNewSponsorRequest, AddSponsorCommand>()
+                    .ForMember(d => d.SponsorUserId, opt => opt.MapFrom(s => s.UserId));
             });
             _mapper = mapperConfig.CreateMapper();
         }
@@ -122,9 +124,22 @@ namespace SetupMeetings.WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [SwaggerOperation("addSponsor")]
-        public IActionResult AddSponsor(string meetingId, [FromBody]CreateNewSponsorRequest newInvitee)
+        public async Task<IActionResult> AddSponsor(string meetingId, [FromBody]CreateNewSponsorRequest request)
         {
-            return CreatedAtAction(nameof(GetSponsor), new { meetingId, userId = "1" }, null);
+            if (!Guid.TryParse(meetingId, out var meetingIdGuid))
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var command = _mapper.Map<AddSponsorCommand>(request);
+            command.MeetingId = meetingIdGuid;
+            await _service.AddSponsor(command);
+            return CreatedAtAction(nameof(GetSponsor), new { meetingId, userId = request.UserId }, null);
         }
 
         [HttpDelete("{meetingId}/sponsors/{userId}")]

@@ -10,6 +10,7 @@ namespace SetupMeetings.WebApi.Services
     {
         Meeting GetMeetingById(Guid meetingId);
         Task<Guid> CreateMeeting(CreateMeetingCommand command);
+        Task AddSponsor(AddSponsorCommand command);
     }
 
     public class MeetingsService : IMeetingsService
@@ -33,6 +34,12 @@ namespace SetupMeetings.WebApi.Services
             command.MeetingId = Guid.NewGuid();
             _bus.Send(Envelope.Create((ICommand)command));
             return Task.FromResult(command.MeetingId);
+        }
+
+        public Task AddSponsor(AddSponsorCommand command)
+        {
+            _bus.Send(Envelope.Create((ICommand)command));
+            return Task.CompletedTask;
         }
     }
 }

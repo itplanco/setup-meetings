@@ -35,6 +35,15 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
                     Organization = user.Organization,
                 })
                 .ToList();
+            meeting.Sponsors = meeting.Sponsors
+                .Select(o => _context.Users.FindById(o.Id))
+                .Select(user => new Sponsor()
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Organization = user.Organization,
+                })
+                .ToList();
             return meeting;
         }
     }
