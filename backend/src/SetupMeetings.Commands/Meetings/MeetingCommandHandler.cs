@@ -6,7 +6,9 @@ namespace SetupMeetings.Commands.Meetings
     public class MeetingCommandHandler :
         ICommandHandler<CreateMeetingCommand>,
         ICommandHandler<AddSponsorCommand>,
-        ICommandHandler<AddInviteeCommand>
+        ICommandHandler<AddInviteeCommand>,
+        ICommandHandler<InviteeRespondToRsvpCommand>
+
     {
         private IEventSourcedRepository<MeetingAggregate> _repository;
 
@@ -32,6 +34,13 @@ namespace SetupMeetings.Commands.Meetings
         {
             var meeting = _repository.Get(command.MeetingId);
             meeting.AddInvitee(command.InviteeUserId);
+            _repository.Save(meeting, command.Id);
+        }
+
+        public void Handle(InviteeRespondToRsvpCommand command)
+        {
+            var meeting = _repository.Get(command.MeetingId);
+            meeting.InviteeRespondToRsvp(command.InviteeUserId, command.Rsvp);
             _repository.Save(meeting, command.Id);
         }
     }

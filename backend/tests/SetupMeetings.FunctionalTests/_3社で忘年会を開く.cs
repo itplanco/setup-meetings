@@ -201,7 +201,7 @@ namespace SetupMeetings.FunctionalTests
         private void 招待者が不参加の返信をする()
         {
             var rsvpNo = new InviteeRespondToRsvpRequest() { Response = false };
-            _client.Put($"/api/meetings/{MeetingId}/invitees/{InviteeId1}", rsvpNo);
+            _client.Put($"/api/meetings/{MeetingId}/invitees/{InviteeId1}/rsvp", rsvpNo);
             _client.AssertStatusCode(HttpStatusCode.Accepted);
         }
 
@@ -221,7 +221,7 @@ namespace SetupMeetings.FunctionalTests
 
         private void 招待者が参加の返信をする()
         {
-            var rsvpYes = new InviteeRespondToRsvpRequest() { Response = false };
+            var rsvpYes = new InviteeRespondToRsvpRequest() { Response = true };
             _client.Put($"/api/meetings/{MeetingId}/invitees/{InviteeId2}", rsvpYes);
             _client.AssertStatusCode(HttpStatusCode.Accepted);
         }

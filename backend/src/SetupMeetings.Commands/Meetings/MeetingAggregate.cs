@@ -12,7 +12,11 @@ namespace SetupMeetings.Commands.Meetings
             Handles<MeetingCreatedEvent>(OnCreated);
             Handles<SponsorAddedToMeetingEvent>(OnSponsorAdded);
             Handles<InviteeAddedToMeetingEvent>(OnInviteeAdded);
+            Handles<InviteeWillAttendToMeetingEvent>(OnInviteeRespond);
+            Handles<InviteeWillNotAttendToMeetingEvent>(OnInviteeRespond);
         }
+
+        
 
         public MeetingAggregate(Guid id, IEnumerable<IVersionedEvent> history) : this(id)
         {
@@ -46,6 +50,18 @@ namespace SetupMeetings.Commands.Meetings
             Update(new InviteeAddedToMeetingEvent() { InviteeId = inviteeId });
         }
 
+        internal void InviteeRespondToRsvp(Guid inviteeId, bool rsvp)
+        {
+            if (rsvp)
+            {
+                Update(new InviteeWillAttendToMeetingEvent() { InviteeId = inviteeId });
+            }
+            else
+            {
+                Update(new InviteeWillNotAttendToMeetingEvent() { InviteeId = inviteeId });
+            }
+        }
+
         private void OnCreated(MeetingCreatedEvent obj)
         {
             _name = obj.Name;
@@ -60,6 +76,16 @@ namespace SetupMeetings.Commands.Meetings
         private void OnInviteeAdded(InviteeAddedToMeetingEvent obj)
         {
             _invitees.Add(obj.InviteeId);
+        }
+
+        private void OnInviteeRespond(InviteeWillAttendToMeetingEvent obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnInviteeRespond(InviteeWillNotAttendToMeetingEvent obj)
+        {
+            
         }
     }
 }

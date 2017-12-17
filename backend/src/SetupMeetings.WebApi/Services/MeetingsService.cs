@@ -12,6 +12,7 @@ namespace SetupMeetings.WebApi.Services
         Task<Guid> CreateMeeting(CreateMeetingCommand command);
         Task AddSponsor(AddSponsorCommand command);
         Task AddInvitee(AddInviteeCommand command);
+        Task UpdateInviteeRsvp(InviteeRespondToRsvpCommand command);
     }
 
     public class MeetingsService : IMeetingsService
@@ -44,6 +45,12 @@ namespace SetupMeetings.WebApi.Services
         }
 
         public Task AddInvitee(AddInviteeCommand command)
+        {
+            _bus.Send(Envelope.Create((ICommand)command));
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateInviteeRsvp(InviteeRespondToRsvpCommand command)
         {
             _bus.Send(Envelope.Create((ICommand)command));
             return Task.CompletedTask;

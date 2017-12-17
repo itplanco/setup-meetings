@@ -44,6 +44,7 @@ namespace SetupMeetings.WebApi.Controllers
                     .ForMember(d => d.SponsorUserId, opt => opt.MapFrom(s => s.UserId));
                 c.CreateMap<CreateNewInviteeRequest, AddInviteeCommand>()
                     .ForMember(d => d.InviteeUserId, opt => opt.MapFrom(s => s.UserId));
+                c.CreateMap<InviteeRespondToRsvpRequest, InviteeRespondToRsvpCommand>();
             });
             _mapper = mapperConfig.CreateMapper();
         }
@@ -252,9 +253,23 @@ namespace SetupMeetings.WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [SwaggerOperation("updateInviteeRsvp")]
-        public IActionResult InviteeRespondToRsvp(string meetingId, string userId, [FromBody]InviteeRespondToRsvpRequest response)
+        public async Task<IActionResult> InviteeRespondToRsvp(string meetingId, string userId, [FromBody]InviteeRespondToRsvpRequest request)
         {
-            return AcceptedAtAction(nameof(GetInvitee), new { meetingId, userId }, null);
+            if (!Guid.TryParse(meetingId, out var meetingIdGuid))
+            {
+                return BadRequest();
+            }
+
+            if (!Guid.TryParse(userId, out var userIdGuid))
+            {
+                return BadRequest();
+            }
+
+            var command = _mapper.Map<InviteeRespondToRsvpCommand>(request);
+            command.MeetingId = meetingIdGuid;
+            command.InviteeUserId = userIdGuid;
+            await _service.UpdateInviteeRsvp(command);
+            return Accepted();
         }
 
         [HttpGet("{meetingId}/attendees")]
