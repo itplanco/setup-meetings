@@ -44,7 +44,8 @@ namespace SetupMeetings.WebApi.Controllers
                     .ForMember(d => d.SponsorUserId, opt => opt.MapFrom(s => s.UserId));
                 c.CreateMap<CreateNewInviteeRequest, AddInviteeCommand>()
                     .ForMember(d => d.InviteeUserId, opt => opt.MapFrom(s => s.UserId));
-                c.CreateMap<InviteeRespondToRsvpRequest, InviteeRespondToRsvpCommand>();
+                c.CreateMap<InviteeRespondToRsvpRequest, InviteeRespondToRsvpCommand>()
+                    .ForMember(d => d.Rsvp, opt => opt.MapFrom(s => s.Response));
             });
             _mapper = mapperConfig.CreateMapper();
         }
@@ -219,7 +220,6 @@ namespace SetupMeetings.WebApi.Controllers
                 return NotFound();
             }
             var response = _mapper.Map<InviteeResponse>(invitee);
-            System.Diagnostics.Trace.Write(invitee.Id + invitee.Name);
             return Ok(response);
         }
 
@@ -264,7 +264,7 @@ namespace SetupMeetings.WebApi.Controllers
             {
                 return BadRequest();
             }
-
+            
             var command = _mapper.Map<InviteeRespondToRsvpCommand>(request);
             command.MeetingId = meetingIdGuid;
             command.InviteeUserId = userIdGuid;

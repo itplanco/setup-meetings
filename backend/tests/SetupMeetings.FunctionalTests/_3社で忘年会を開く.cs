@@ -213,7 +213,7 @@ namespace SetupMeetings.FunctionalTests
                 m =>
                     m.MeetingId == MeetingId &&
                     m.Invitees
-                        .Where(invitee => invitee.UserName == "µ‘ÒŽÒ1")
+                        .Where(invitee => invitee.UserName == "Invitee1")
                         .First()
                         .Rsvp == false &&
                     !m.Attendees.Any());
@@ -222,7 +222,7 @@ namespace SetupMeetings.FunctionalTests
         private void µ‘ÒŽÒ‚ªŽQ‰Á‚Ì•ÔM‚ð‚·‚é()
         {
             var rsvpYes = new InviteeRespondToRsvpRequest() { Response = true };
-            _client.Put($"/api/meetings/{MeetingId}/invitees/{InviteeId2}", rsvpYes);
+            _client.Put($"/api/meetings/{MeetingId}/invitees/{InviteeId2}/rsvp", rsvpYes);
             _client.AssertStatusCode(HttpStatusCode.Accepted);
         }
 
@@ -234,7 +234,7 @@ namespace SetupMeetings.FunctionalTests
                 m =>
                     m.MeetingId == MeetingId &&
                     m.Invitees
-                        .Where(invitee => invitee.UserName == "µ‘ÒŽÒ2")
+                        .Where(invitee => invitee.UserName == "Invitee2")
                         .First()
                         .Rsvp == true &&
                     m.Attendees.Any());

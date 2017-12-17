@@ -80,7 +80,7 @@ namespace SetupMeetings.Commands.Meetings
 
         private void OnInviteeRespond(InviteeWillAttendToMeetingEvent obj)
         {
-            throw new NotImplementedException();
+
         }
 
         private void OnInviteeRespond(InviteeWillNotAttendToMeetingEvent obj)
