@@ -111,13 +111,27 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("getSponsorById")]
         public IActionResult GetSponsor(string meetingId, string userId)
         {
-            return Ok(new SponsorResponse()
+            if (!Guid.TryParse(meetingId, out var guidMeetingId))
             {
-                UserId = "1",
-                UserName = "誰それ何某",
-                OrganizationId = "1",
-                OrganizationName = "株式会社 なんちゃら",
-            });
+                return NotFound();
+            }
+            if (!Guid.TryParse(userId, out var guidUserId))
+            {
+                return NotFound();
+            }
+
+            var meeting = _service.GetMeetingById(guidMeetingId);
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            var sponsor = meeting.Sponsors.Find(s => s.Id == guidUserId);
+            if (sponsor == null)
+            {
+                return NotFound();
+            }
+            var response = _mapper.Map<SponsorResponse>(sponsor);
+            return Ok(response);
         }
 
         [HttpPost("{meetingId}/sponsors")]
