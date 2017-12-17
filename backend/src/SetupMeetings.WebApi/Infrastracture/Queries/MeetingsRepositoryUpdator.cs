@@ -7,7 +7,8 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
 {
     public class MeetingsRepositoryUpdator :
         IEventHandler<MeetingCreatedEvent>,
-        IEventHandler<SponsorAddedToMeetingEvent>
+        IEventHandler<SponsorAddedToMeetingEvent>,
+        IEventHandler<InviteeAddedToMeetingEvent>
     {
         private SetupMeetingsQueryContext _context;
 
@@ -48,6 +49,21 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
             meeting.Sponsors.Add(new Sponsor()
             {
                 Id = @event.SponsorId,
+            });
+            _context.SaveChanges();
+        }
+
+        public void Handle(InviteeAddedToMeetingEvent @event)
+        {
+            var meeting = _context.Meetings.FindById(@event.SourceId);
+            if (meeting == null)
+            {
+                return;
+            }
+
+            meeting.Invitees.Add(new Invitee()
+            {
+                Id = @event.InviteeId,
             });
             _context.SaveChanges();
         }
