@@ -152,6 +152,11 @@ namespace SetupMeetings.FunctionalTests
                 m =>
                     m.Sponsors.Count == 2 &&
                     m.Sponsors[1].UserName == "Sponsor2");
+            _client.Get($"/api/meetings/{MeetingId}/sponsors/{SponsorId1}");
+            _client.AssertObjectWithStatus<SponsorResponse>(
+                HttpStatusCode.OK,
+                m =>
+                    m.UserName == "Sponsor1");
         }
 
         private void 招待者を6人追加する()
@@ -186,6 +191,11 @@ namespace SetupMeetings.FunctionalTests
                 m =>
                     m.Invitees.Count == 6 &&
                     !m.Invitees.Any(invitee => invitee.Rsvp));
+            _client.Get($"/api/meetings/{MeetingId}/invitees/{InviteeId1}");
+            _client.AssertObjectWithStatus<InviteeResponse>(
+                HttpStatusCode.OK,
+                m => 
+                    m.UserName == "Invitee1");
         }
 
         private void 招待者が不参加の返信をする()

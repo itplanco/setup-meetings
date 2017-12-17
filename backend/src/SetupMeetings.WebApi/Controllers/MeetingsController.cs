@@ -174,20 +174,22 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("getInvitees")]
         public IActionResult GetInvitees(string meetingId)
         {
-            return Ok(new InviteesResponse()
+
+            if (!Guid.TryParse(meetingId, out var guidMeetingId))
             {
-                Invitees = new List<InviteeResponse>()
-                {
-                    new InviteeResponse()
-                    {
-                        UserId = "1",
-                        UserName = "誰それ何某",
-                        OrganizationId = "1",
-                        OrganizationName = "株式会社 なんちゃら",
-                        Rsvp = false,
-                    },
-                }
-            });
+                return NotFound();
+            }
+
+            var meeting = _service.GetMeetingById(guidMeetingId);
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            var response = new InviteesResponse()
+            {
+                Invitees = meeting.Invitees.Select(s => _mapper.Map<InviteeResponse>(s)).ToList()
+            };
+            return Ok(response);
         }
 
         [HttpGet("{meetingId}/invitees/{userId}")]
@@ -196,14 +198,28 @@ namespace SetupMeetings.WebApi.Controllers
         [SwaggerOperation("getInviteesById")]
         public IActionResult GetInvitee(string meetingId, string userId)
         {
-            return Ok(new InviteeResponse()
+            if (!Guid.TryParse(meetingId, out var guidMeetingId))
             {
-                UserId = "1",
-                UserName = "誰それ何某",
-                OrganizationId = "1",
-                OrganizationName = "株式会社 なんちゃら",
-                Rsvp = false,
-            });
+                return NotFound();
+            }
+            if (!Guid.TryParse(userId, out var guidUserId))
+            {
+                return NotFound();
+            }
+
+            var meeting = _service.GetMeetingById(guidMeetingId);
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+            var invitee = meeting.Invitees.Find(s => s.Id == guidUserId);
+            if (invitee == null)
+            {
+                return NotFound();
+            }
+            var response = _mapper.Map<InviteeResponse>(invitee);
+            System.Diagnostics.Trace.Write(invitee.Id + invitee.Name);
+            return Ok(response);
         }
 
         [HttpPost("{meetingId}/invitees")]

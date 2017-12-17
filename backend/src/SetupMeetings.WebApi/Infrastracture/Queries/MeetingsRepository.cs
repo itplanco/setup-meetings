@@ -44,6 +44,16 @@ namespace SetupMeetings.WebApi.Infrastracture.Queries
                     Organization = user.Organization,
                 })
                 .ToList();
+            meeting.Invitees = meeting.Invitees
+                .Select(o => new { rsvp = o.Rsvp , user = _context.Users.FindById(o.Id) })
+                .Select(o => new Invitee()
+                {
+                    Id = o.user.Id,
+                    Name = o.user.Name,
+                    Organization = o.user.Organization,
+                    Rsvp = o.rsvp,
+                })
+                .ToList();
             return meeting;
         }
     }
